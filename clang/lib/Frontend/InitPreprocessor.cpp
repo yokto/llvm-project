@@ -1027,6 +1027,7 @@ static void InitializePredefinedMacros(const TargetInfo &TI,
   DefineType("__INTPTR_TYPE__", TI.getIntPtrType(), Builder);
   DefineFmt("__INTPTR", TI.getIntPtrType(), TI, Builder);
   DefineType("__SIZE_TYPE__", TI.getSizeType(), Builder);
+  DefineType("__SSIZE_TYPE__", TI.getSignedSizeType(), Builder);
   DefineFmt("__SIZE", TI.getSizeType(), TI, Builder);
   DefineType("__WCHAR_TYPE__", TI.getWCharType(), Builder);
   DefineType("__WINT_TYPE__", TI.getWIntType(), Builder);

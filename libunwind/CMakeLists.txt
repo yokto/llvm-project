@@ -240,7 +240,10 @@ if (LIBUNWIND_USES_ARM_EHABI AND NOT CXX_SUPPORTS_FUNWIND_TABLES_FLAG)
                      "because this target uses ARM Exception Handling ABI")
 endif()
 
+message("fooo")
 add_cxx_compile_flags_if_supported(-fno-exceptions)
+add_cxx_compile_flags_if_supported(-fbarrrig)
+message("booo")
 add_cxx_compile_flags_if_supported(-fno-rtti)
 
 # Ensure that we don't depend on C++ standard library.

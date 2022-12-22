@@ -107,6 +107,8 @@ if (LIBUNWIND_ENABLE_SHARED AND
     NOT (CXX_SUPPORTS_FNO_EXCEPTIONS_FLAG AND
          CXX_SUPPORTS_FUNWIND_TABLES_FLAG))
   message(FATAL_ERROR
+	  "uwt ${LIBUNWIND_SUPPORTS_FUNWIND_TABLES_FLAG}"
+	  "noex ${LIBUNWIND_SUPPORTS_FNO_EXCEPTIONS_FLAG}"
           "Compiler doesn't support generation of unwind tables if exception "
           "support is disabled.  Building libunwind DSO with runtime dependency "
           "on C++ ABI library is not supported.")

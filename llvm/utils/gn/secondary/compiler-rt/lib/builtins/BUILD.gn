@@ -221,7 +221,6 @@ static_library("builtins") {
   if (current_os != "fuchsia" && current_os != "baremetal") {
     sources += [
       "emutls.c",
-      "enable_execute_stack.c",
       "eprintf.c",
     ]
   }

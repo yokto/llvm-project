@@ -47,10 +47,10 @@ static void emutls_shutdown(emutls_address_array *array);
 
 #ifndef _WIN32
 
-#include <pthread.h>
+#include <thread.h>
 
-static pthread_mutex_t emutls_mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_key_t emutls_pthread_key;
+static mtx_t emutls_mutex;
+static tss_t emutls_pthread_key;
 static bool emutls_key_created = false;
 
 typedef unsigned int gcc_word __attribute__((mode(word)));
@@ -90,11 +90,11 @@ static __inline void emutls_memalign_free(void *base) {
 }
 
 static __inline void emutls_setspecific(emutls_address_array *value) {
-  pthread_setspecific(emutls_pthread_key, (void *)value);
+  tss_set(emutls_pthread_key, (void *)value);
 }
 
 static __inline emutls_address_array *emutls_getspecific(void) {
-  return (emutls_address_array *)pthread_getspecific(emutls_pthread_key);
+  return (emutls_address_array *)tss_get(emutls_pthread_key);
 }
 
 static void emutls_key_destructor(void *ptr) {
@@ -115,19 +115,21 @@ static void emutls_key_destructor(void *ptr) {
 }
 
 static __inline void emutls_init(void) {
-  if (pthread_key_create(&emutls_pthread_key, emutls_key_destructor) != 0)
+  if (mtx_init(&emutls_mutex, mtx_plain) != 0)
+    abort();
+  if (tss_create(&emutls_pthread_key, emutls_key_destructor) != 0)
     abort();
   emutls_key_created = true;
 }
 
 static __inline void emutls_init_once(void) {
-  static pthread_once_t once = PTHREAD_ONCE_INIT;
-  pthread_once(&once, emutls_init);
+  static once_flag once = ONCE_FLAG_INIT;
+  call_once(&once, emutls_init);
 }
 
-static __inline void emutls_lock(void) { pthread_mutex_lock(&emutls_mutex); }
+static __inline void emutls_lock(void) { mtx_lock(&emutls_mutex); }
 
-static __inline void emutls_unlock(void) { pthread_mutex_unlock(&emutls_mutex); }
+static __inline void emutls_unlock(void) { mtx_unlock(&emutls_mutex); }
 
 #else // _WIN32
 
@@ -401,7 +403,7 @@ void *__emutls_get_address(__emutls_control *control) {
 // Called by Bionic on dlclose to delete the emutls pthread key.
 __attribute__((visibility("hidden"))) void __emutls_unregister_key(void) {
   if (emutls_key_created) {
-    pthread_key_delete(emutls_pthread_key);
+    tss_delete(emutls_pthread_key);
     emutls_key_created = false;
   }
 }
