@@ -94,8 +94,10 @@ endif()
 
 # Setup flags.
 if (CXX_SUPPORTS_NOSTDLIBXX_FLAG)
+  message("flab2")
   add_link_flags_if_supported(-nostdlib++)
 else()
+  message("flab3")
   add_link_flags_if_supported(-nodefaultlibs)
 endif()
 

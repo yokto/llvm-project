@@ -354,6 +354,7 @@ macro(load_llvm_config)
 endmacro()
 
 macro(construct_compiler_rt_default_triple)
+	message(def ${COMPILER_RT_DEFAULT_TARGET_ONLY} ${COMPILER_RT_DEFAULT_TARGET_TRIPLE})
   if(COMPILER_RT_DEFAULT_TARGET_ONLY)
     if(DEFINED COMPILER_RT_DEFAULT_TARGET_TRIPLE)
       message(FATAL_ERROR "COMPILER_RT_DEFAULT_TARGET_TRIPLE isn't supported when building for default target only")

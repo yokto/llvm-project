@@ -32,7 +32,7 @@
 #endif
 
 #if _LIBUNWIND_USE_DLADDR
-#include <dlfcn.h>
+//#include <dlfcn.h>
 #if defined(__ELF__) && defined(_LIBUNWIND_LINK_DL_LIB)
 #pragma comment(lib, "dl")
 #endif

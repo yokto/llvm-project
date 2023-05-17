@@ -342,10 +342,7 @@ void* __libcpp_aligned_alloc(std::size_t __alignment, std::size_t __size) {
 #if defined(_LIBCPP_MSVCRT_LIKE)
   return ::_aligned_malloc(__size, __alignment);
 #else
-  void* __result = nullptr;
-  (void)::posix_memalign(&__result, __alignment, __size);
-  // If posix_memalign fails, __result is unmodified so we still return `nullptr`.
-  return __result;
+  return ::aligned_alloc(__size, __alignment);
 #endif
 }
 
@@ -354,7 +351,7 @@ void __libcpp_aligned_free(void* __ptr) {
 #if defined(_LIBCPP_MSVCRT_LIKE)
   ::_aligned_free(__ptr);
 #else
-  ::free(__ptr);
+  ::aligned_free(__ptr);
 #endif
 }
 #endif // !_LIBCPP_HAS_NO_ALIGNED_ALLOCATION

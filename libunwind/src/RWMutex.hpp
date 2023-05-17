@@ -16,7 +16,7 @@
 #if defined(_WIN32)
 #include <windows.h>
 #elif !defined(_LIBUNWIND_HAS_NO_THREADS)
-#include <pthread.h>
+#include <thread.h>
 #if defined(__ELF__) && defined(_LIBUNWIND_LINK_PTHREAD_LIB)
 #pragma comment(lib, "pthread")
 #endif
@@ -63,13 +63,38 @@ private:
 
 class _LIBUNWIND_HIDDEN RWMutex {
 public:
-  bool lock_shared() { return pthread_rwlock_rdlock(&_lock) == 0;  }
-  bool unlock_shared() { return pthread_rwlock_unlock(&_lock) == 0; }
-  bool lock() { return pthread_rwlock_wrlock(&_lock) == 0; }
-  bool unlock() { return pthread_rwlock_unlock(&_lock) == 0; }
+  RWMutex() { mtx_init(&(this->mutex), mtx_plain); }
+  bool lock_shared() {
+    mtx_lock(&(this->mutex));
+    this->readers++;
+    mtx_unlock(&(this->mutex));
+    return 0;
+  }
+  bool unlock_shared() {
+    mtx_lock(&(this->mutex));
+    if (this->readers > 0) {
+        this->readers--;
+    } else {
+        mtx_unlock(&(this->mutex));
+        return 0;
+    }
+    if (this->readers == 0) {
+        mtx_unlock(&(this->mutex));
+    }
+    return 0;
+  }
+  bool lock() {
+    mtx_lock(&(this->mutex));
+    while (this->readers > 0) {
+        thrd_yield();
+    }
+    return 0;
+  }
+  bool unlock() { return unlock_shared(); }
 
 private:
-  pthread_rwlock_t _lock = PTHREAD_RWLOCK_INITIALIZER;
+  mtx_t mutex;
+  int readers = 0;
 };
 
 #else

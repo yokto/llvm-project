@@ -232,6 +232,7 @@ endmacro()
 # For each specified flag, add that link flag to the provided target.
 # The flags are added with the given visibility, i.e. PUBLIC|PRIVATE|INTERFACE.
 function(target_add_link_flags_if_supported target visibility)
+  message("flab4\n\n\n\n")
   foreach(flag ${ARGN})
     mangle_name("${flag}" flagname)
     check_cxx_compiler_flag("${flag}" "CXX_SUPPORTS_${flagname}_FLAG")

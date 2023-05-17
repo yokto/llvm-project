@@ -109,6 +109,7 @@ if(COMPILER_RT_CAN_EXECUTE_TESTS)
   add_subdirectory(metadata)
 endif()
 
+message(test ${COMPILER_RT_STANDALONE_BUILD})
 if(COMPILER_RT_STANDALONE_BUILD)
   # Now that we've traversed all the directories and know all the lit testsuites,
   # introduce a rule to run to run all of them.

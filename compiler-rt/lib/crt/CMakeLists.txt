@@ -1,5 +1,6 @@
 if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   cmake_minimum_required(VERSION 3.13.4)
+
   if ("${CMAKE_VERSION}" VERSION_LESS "3.20.0")
     message(WARNING
       "Your CMake version is ${CMAKE_VERSION}. Starting with LLVM 17.0.0, the "
