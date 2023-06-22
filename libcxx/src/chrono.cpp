@@ -116,7 +116,7 @@ static system_clock::time_point __libcpp_system_clock_now() {
   return system_clock::time_point(duration_cast<system_clock::duration>(d - nt_to_unix_epoch));
 }
 
-#elif defined(CLOCK_REALTIME) && defined(_LIBCPP_USE_CLOCK_GETTIME)
+#elif true // defined(CLOCK_REALTIME) && defined(_LIBCPP_USE_CLOCK_GETTIME)
 
 static system_clock::time_point __libcpp_system_clock_now() {
   struct timespec tp;

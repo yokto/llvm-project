@@ -37,11 +37,11 @@
 #   define _CTYPE_DISABLE_MACROS
 #endif
 
-#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
-#   include "__support/win32/locale_win32.h"
-#elif !defined(__BIONIC__) && !defined(__NuttX__)
-#   include <langinfo.h>
-#endif
+//#if defined(_LIBCPP_MSVCRT) || defined(__MINGW32__)
+//#   include "__support/win32/locale_win32.h"
+//#elif !defined(__BIONIC__) && !defined(__NuttX__)
+//#   include <langinfo.h>
+//#endif
 
 #include "include/atomic_support.h"
 #include "include/sso_allocator.h"

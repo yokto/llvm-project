@@ -21,18 +21,18 @@
 #include <system_error>
 #include <utility>
 
-#if defined(_LIBCPP_WIN32API)
-# define WIN32_LEAN_AND_MEAN
-# define NOMINMAX
-# include <windows.h>
-#else
-# include <dirent.h>   // for DIR & friends
-# include <fcntl.h>    /* values for fchmodat */
-# include <sys/stat.h>
-# include <sys/statvfs.h>
-# include <sys/time.h> // for ::utimes as used in __last_write_time
-# include <unistd.h>
-#endif // defined(_LIBCPP_WIN32API)
+//#if defined(_LIBCPP_WIN32API)
+//# define WIN32_LEAN_AND_MEAN
+//# define NOMINMAX
+//# include <windows.h>
+//#else
+//# include <dirent.h>   // for DIR & friends
+//# include <fcntl.h>    /* values for fchmodat */
+//# include <sys/stat.h>
+//# include <sys/statvfs.h>
+//# include <sys/time.h> // for ::utimes as used in __last_write_time
+//# include <unistd.h>
+//#endif // defined(_LIBCPP_WIN32API)
 
 #include "../include/apple_availability.h"
 
@@ -278,7 +278,7 @@ struct StatT {
 
 #else
 using TimeSpec = struct timespec;
-using TimeVal = struct timeval;
+using TimeVal = struct timespec;
 using StatT = struct stat;
 #endif
 
@@ -465,48 +465,48 @@ using fs_time = time_util<file_time_type, time_t, TimeSpec>;
 
 #if defined(__APPLE__)
 inline TimeSpec extract_mtime(StatT const& st) { return st.st_mtimespec; }
-inline TimeSpec extract_atime(StatT const& st) { return st.st_atimespec; }
+//inline TimeSpec extract_atime(StatT const& st) { return st.st_atimespec; }
 #elif defined(__MVS__)
 inline TimeSpec extract_mtime(StatT const& st) {
   TimeSpec TS = {st.st_mtime, 0};
   return TS;
 }
-inline TimeSpec extract_atime(StatT const& st) {
-  TimeSpec TS = {st.st_atime, 0};
-  return TS;
-}
+//inline TimeSpec extract_atime(StatT const& st) {
+//  TimeSpec TS = {st.st_atime, 0};
+//  return TS;
+//}
 #elif defined(_AIX)
 inline TimeSpec extract_mtime(StatT const& st) {
   TimeSpec TS = {st.st_mtime, st.st_mtime_n};
   return TS;
 }
-inline TimeSpec extract_atime(StatT const& st) {
-  TimeSpec TS = {st.st_atime, st.st_atime_n};
-  return TS;
-}
+//inline TimeSpec extract_atime(StatT const& st) {
+//  TimeSpec TS = {st.st_atime, st.st_atime_n};
+//  return TS;
+//}
 #else
 inline TimeSpec extract_mtime(StatT const& st) { return st.st_mtim; }
-inline TimeSpec extract_atime(StatT const& st) { return st.st_atim; }
+//inline TimeSpec extract_atime(StatT const& st) { return st.st_atim; }
 #endif
 
 #if !defined(_LIBCPP_WIN32API)
 inline TimeVal make_timeval(TimeSpec const& ts) {
   using namespace chrono;
   auto Convert = [](long nsec) {
-    using int_type = decltype(std::declval<TimeVal>().tv_usec);
+    using int_type = decltype(std::declval<TimeVal>().tv_nsec);
     auto dur = duration_cast<microseconds>(nanoseconds(nsec)).count();
     return static_cast<int_type>(dur);
   };
   TimeVal TV = {};
   TV.tv_sec = ts.tv_sec;
-  TV.tv_usec = Convert(ts.tv_nsec);
+  TV.tv_nsec = Convert(ts.tv_nsec);
   return TV;
 }
 
 inline bool posix_utimes(const path& p, std::array<TimeSpec, 2> const& TS,
                   error_code& ec) {
   TimeVal ConvertedTS[2] = {make_timeval(TS[0]), make_timeval(TS[1])};
-  if (::utimes(p.c_str(), ConvertedTS) == -1) {
+  if (::mtime(p.c_str(), &ConvertedTS[0]) == -1) {
     ec = capture_errno();
     return true;
   }

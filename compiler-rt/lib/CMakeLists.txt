@@ -1,6 +1,15 @@
 # First, add the subdirectories which contain feature-based runtime libraries
 # and several convenience helper libraries.
 
+set(COMPILER_RT_BUILD_BUILTINS ON)
+set(COMPILER_RT_BUILD_LIBFUZZER OFF)
+set(COMPILER_RT_BUILD_MEMPROF OFF)
+set(COMPILER_RT_BUILD_PROFILE OFF)
+set(COMPILER_RT_BUILD_SANITIZERS OFF)
+set(COMPILER_RT_BUILD_XRAY OFF)
+set(COMPILER_RT_BUILD_ORC OFF)
+set(COMPILER_RT_DEFAULT_TARGET_ONLY ON)
+
 include(AddCompilerRT)
 include(SanitizerUtils)
 

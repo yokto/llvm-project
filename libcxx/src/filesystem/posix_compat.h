@@ -28,17 +28,17 @@
 
 #include "filesystem_common.h"
 
-#if defined(_LIBCPP_WIN32API)
-# define WIN32_LEAN_AND_MEAN
-# define NOMINMAX
-# include <windows.h>
-# include <io.h>
-# include <winioctl.h>
-#else
-# include <unistd.h>
-# include <sys/stat.h>
-# include <sys/statvfs.h>
-#endif
+//#if defined(_LIBCPP_WIN32API)
+//# define WIN32_LEAN_AND_MEAN
+//# define NOMINMAX
+//# include <windows.h>
+//# include <io.h>
+//# include <winioctl.h>
+//#else
+//# include <unistd.h>
+//# include <sys/stat.h>
+//# include <sys/statvfs.h>
+//#endif
 #include <time.h>
 
 #if defined(_LIBCPP_WIN32API)
@@ -232,36 +232,36 @@ int mkdir(const wchar_t *path, int permissions) {
   return _wmkdir(path);
 }
 
-int symlink_file_dir(const wchar_t *oldname, const wchar_t *newname,
-                     bool is_dir) {
-  path dest(oldname);
-  dest.make_preferred();
-  oldname = dest.c_str();
-  DWORD flags = is_dir ? SYMBOLIC_LINK_FLAG_DIRECTORY : 0;
-  if (CreateSymbolicLinkW(newname, oldname,
-                          flags | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE))
-    return 0;
-  int e = GetLastError();
-  if (e != ERROR_INVALID_PARAMETER)
-    return set_errno(e);
-  if (CreateSymbolicLinkW(newname, oldname, flags))
-    return 0;
-  return set_errno();
-}
-
-int symlink_file(const wchar_t *oldname, const wchar_t *newname) {
-  return symlink_file_dir(oldname, newname, false);
-}
-
-int symlink_dir(const wchar_t *oldname, const wchar_t *newname) {
-  return symlink_file_dir(oldname, newname, true);
-}
-
-int link(const wchar_t *oldname, const wchar_t *newname) {
-  if (CreateHardLinkW(newname, oldname, nullptr))
-    return 0;
-  return set_errno();
-}
+//int symlink_file_dir(const wchar_t *oldname, const wchar_t *newname,
+//                     bool is_dir) {
+//  path dest(oldname);
+//  dest.make_preferred();
+//  oldname = dest.c_str();
+//  DWORD flags = is_dir ? SYMBOLIC_LINK_FLAG_DIRECTORY : 0;
+//  if (CreateSymbolicLinkW(newname, oldname,
+//                          flags | SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE))
+//    return 0;
+//  int e = GetLastError();
+//  if (e != ERROR_INVALID_PARAMETER)
+//    return set_errno(e);
+//  if (CreateSymbolicLinkW(newname, oldname, flags))
+//    return 0;
+//  return set_errno();
+//}
+//
+//int symlink_file(const wchar_t *oldname, const wchar_t *newname) {
+//  return symlink_file_dir(oldname, newname, false);
+//}
+//
+//int symlink_dir(const wchar_t *oldname, const wchar_t *newname) {
+//  return symlink_file_dir(oldname, newname, true);
+//}
+//
+//int link(const wchar_t *oldname, const wchar_t *newname) {
+//  if (CreateHardLinkW(newname, oldname, nullptr))
+//    return 0;
+//  return set_errno();
+//}
 
 int remove(const wchar_t *path) {
   detail::WinHandle h(path, DELETE, FILE_FLAG_OPEN_REPARSE_POINT);
@@ -479,22 +479,22 @@ SSizeT readlink(const wchar_t *path, wchar_t *ret_buf, size_t bufsize) {
 }
 
 #else
-int symlink_file(const char *oldname, const char *newname) {
-  return ::symlink(oldname, newname);
-}
-int symlink_dir(const char *oldname, const char *newname) {
-  return ::symlink(oldname, newname);
-}
+//int symlink_file(const char *oldname, const char *newname) {
+//  return ::symlink(oldname, newname);
+//}
+//int symlink_dir(const char *oldname, const char *newname) {
+//  return ::symlink(oldname, newname);
+//}
 using ::chdir;
 using ::close;
-using ::fchmod;
+//using ::fchmod;
 #if defined(AT_SYMLINK_NOFOLLOW) && defined(AT_FDCWD)
-using ::fchmodat;
+//using ::fchmodat;
 #endif
 using ::fstat;
-using ::ftruncate;
+//using ::ftruncate;
 using ::getcwd;
-using ::link;
+//using ::link;
 using ::lstat;
 using ::mkdir;
 using ::open;
@@ -506,10 +506,10 @@ using ::stat;
 using ::statvfs;
 using ::truncate;
 
-#define O_BINARY 0
-
+//#define O_BINARY 0
+//
 using StatVFS = struct statvfs;
-using ModeT = ::mode_t;
+//using ModeT = ::mode_t;
 using SSizeT = ::ssize_t;
 
 #endif

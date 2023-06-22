@@ -26,7 +26,7 @@
 #include <stdlib.h>
 
 #if defined(_LIBCPP_USING_GETENTROPY)
-#   include <sys/random.h>
+#   include <random.h>
 #elif defined(_LIBCPP_USING_DEV_RANDOM)
 #   include <fcntl.h>
 #   include <unistd.h>

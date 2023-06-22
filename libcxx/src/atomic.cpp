@@ -7,6 +7,7 @@
 //===----------------------------------------------------------------------===//
 
 #include <__config>
+#undef __linux__
 #ifndef _LIBCPP_HAS_NO_THREADS
 
 #include <atomic>

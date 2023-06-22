@@ -140,10 +140,10 @@ inline _LIBCPP_HIDE_FROM_ABI file_time_type last_write_time(const path& __p) { r
 inline _LIBCPP_HIDE_FROM_ABI file_time_type last_write_time(const path& __p, error_code& __ec) noexcept { return __last_write_time(__p, &__ec); }
 inline _LIBCPP_HIDE_FROM_ABI void last_write_time(const path& __p, file_time_type __t) { __last_write_time(__p, __t); }
 inline _LIBCPP_HIDE_FROM_ABI void last_write_time(const path& __p, file_time_type __t, error_code& __ec) noexcept { __last_write_time(__p, __t, &__ec); }
-_LIBCPP_FUNC_VIS void __permissions(const path&, perms, perm_options, error_code* = nullptr);
-inline _LIBCPP_HIDE_FROM_ABI void permissions(const path& __p, perms __prms, perm_options __opts = perm_options::replace) { __permissions(__p, __prms, __opts); }
-inline _LIBCPP_HIDE_FROM_ABI void permissions(const path& __p, perms __prms, error_code& __ec) noexcept { __permissions(__p, __prms, perm_options::replace, &__ec); }
-inline _LIBCPP_HIDE_FROM_ABI void permissions(const path& __p, perms __prms, perm_options __opts, error_code& __ec) { __permissions(__p, __prms, __opts, &__ec); }
+//_LIBCPP_FUNC_VIS void __permissions(const path&, perms, perm_options, error_code* = nullptr);
+//inline _LIBCPP_HIDE_FROM_ABI void permissions(const path& __p, perms __prms, perm_options __opts = perm_options::replace) { __permissions(__p, __prms, __opts); }
+//inline _LIBCPP_HIDE_FROM_ABI void permissions(const path& __p, perms __prms, error_code& __ec) noexcept { __permissions(__p, __prms, perm_options::replace, &__ec); }
+//inline _LIBCPP_HIDE_FROM_ABI void permissions(const path& __p, perms __prms, perm_options __opts, error_code& __ec) { __permissions(__p, __prms, __opts, &__ec); }
 
 inline _LIBCPP_INLINE_VISIBILITY path proximate(const path& __p, const path& __base, error_code& __ec) {
   path __tmp = __weakly_canonical(__p, &__ec);
