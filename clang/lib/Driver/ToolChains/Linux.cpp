@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <iostream>
 #include "Linux.h"
 #include "Arch/ARM.h"
 #include "Arch/LoongArch.h"
@@ -196,6 +197,11 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
     ExtraOpts.push_back("now");
   }
 
+  if (Triple.getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
+    ExtraOpts.push_back("-Bsymbolic");
+    ExtraOpts.push_back("-shared");
+  }
+
   if (Distro.IsOpenSUSE() || Distro.IsUbuntu() || Distro.IsAlpineLinux() ||
       Triple.isAndroid()) {
     ExtraOpts.push_back("-z");
@@ -239,7 +245,9 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
   // Android loader does not support .gnu.hash until API 23.
   // Hexagon linker/loader does not support .gnu.hash
   if (!IsMips && !IsHexagon) {
-    if (Distro.IsOpenSUSE() || Distro == Distro::UbuntuLucid ||
+    if (Triple.getEnvironment() == llvm::Triple::Zwolf) {
+      ExtraOpts.push_back("--hash-style=sysv");
+    } else if (Distro.IsOpenSUSE() || Distro == Distro::UbuntuLucid ||
         Distro == Distro::UbuntuJaunty || Distro == Distro::UbuntuKarmic ||
         (IsAndroid && Triple.isAndroidVersionLT(23)))
       ExtraOpts.push_back("--hash-style=both");

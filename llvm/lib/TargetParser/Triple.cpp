@@ -636,6 +636,7 @@ static Triple::EnvironmentType parseEnvironment(StringRef EnvironmentName) {
       .StartsWith("callable", Triple::Callable)
       .StartsWith("mesh", Triple::Mesh)
       .StartsWith("amplification", Triple::Amplification)
+      .StartsWith("zwolf", Triple::Zwolf)
       .Default(Triple::UnknownEnvironment);
 }
 

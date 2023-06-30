@@ -94,10 +94,8 @@ endif()
 
 # Setup flags.
 if (CXX_SUPPORTS_NOSTDLIBXX_FLAG)
-  message("flab2")
   add_link_flags_if_supported(-nostdlib++)
 else()
-  message("flab3")
   add_link_flags_if_supported(-nodefaultlibs)
 endif()
 
@@ -193,6 +191,9 @@ if (LIBCXXABI_ENABLE_SHARED)
       SOVERSION "1"
       VERSION "${LIBCXXABI_LIBRARY_VERSION}"
   )
+  set_target_properties(cxxabi_shared PROPERTIES NO_SONAME 1)    
+  target_link_options(cxxabi_shared PRIVATE "-Wl,-soname,llvm/lib/x86_64-unknown-linux-zwolf/libc++abi.so")
+
 
   if (ZOS)
     add_custom_command(TARGET cxxabi_shared POST_BUILD

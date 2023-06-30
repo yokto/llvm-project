@@ -158,6 +158,10 @@ endif()
 
 if (LIBUNWIND_ENABLE_SHARED)
   add_library(unwind_shared SHARED)
+
+  set_target_properties(unwind_shared PROPERTIES NO_SONAME 1)
+  target_link_options(unwind_shared PRIVATE "-Wl,-soname,llvm/lib/x86_64-unknown-linux-zwolf/libunwind.so")
+
   target_link_libraries(unwind_shared PUBLIC unwind_shared_objects)
   set_target_properties(unwind_shared
     PROPERTIES

@@ -755,7 +755,7 @@ function(cxx_link_system_libraries target)
   endif()
 
   if (LIBCXX_HAS_M_LIB)
-    target_link_libraries(${target} PRIVATE m)
+	  #target_link_libraries(${target} PRIVATE m)
   endif()
 
   if (LIBCXX_HAS_RT_LIB)

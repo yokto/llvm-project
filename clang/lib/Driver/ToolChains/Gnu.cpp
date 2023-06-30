@@ -406,10 +406,10 @@ void tools::gnutools::Linker::ConstructJob(Compilation &C, const JobAction &JA,
   const bool isAndroid = ToolChain.getTriple().isAndroid();
   const bool IsIAMCU = ToolChain.getTriple().isOSIAMCU();
   const bool IsVE = ToolChain.getTriple().isVE();
-  const bool IsPIE = getPIE(Args, ToolChain);
+  const bool IsPIE = false; //getPIE(Args, ToolChain);
   const bool IsStaticPIE = getStaticPIE(Args, ToolChain);
   const bool IsStatic = getStatic(Args);
-  const bool HasCRTBeginEndFiles = (ToolChain.getTriple().hasEnvironment() && ToolChain.getTriple().getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) &&
+  const bool HasCRTBeginEndFiles = (ToolChain.getTriple().hasEnvironment() && ToolChain.getTriple().getEnvironment() != llvm::Triple::EnvironmentType::Zwolf) &&
       (ToolChain.getTriple().hasEnvironment() ||
       (ToolChain.getTriple().getVendor() != llvm::Triple::MipsTechnologies));
 
@@ -584,7 +584,7 @@ void tools::gnutools::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       if (OnlyLibstdcxxStatic)
         CmdArgs.push_back("-Bdynamic");
     }
-    CmdArgs.push_back("-lm");
+    //CmdArgs.push_back("-lm");
   }
 
   // Silence warnings when linking C code with a C++ '-stdlib' argument.
