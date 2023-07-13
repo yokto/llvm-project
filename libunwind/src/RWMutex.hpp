@@ -16,7 +16,7 @@
 #if defined(_WIN32)
 #include <windows.h>
 #elif !defined(_LIBUNWIND_HAS_NO_THREADS)
-#include <thread.h>
+#include <threads.h>
 #if defined(__ELF__) && defined(_LIBUNWIND_LINK_PTHREAD_LIB)
 #pragma comment(lib, "pthread")
 #endif

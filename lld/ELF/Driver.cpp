@@ -1474,6 +1474,20 @@ static void readConfigs(opt::InputArgList &args) {
   config->versionDefinitions.push_back(
       {"global", (uint16_t)VER_NDX_GLOBAL, {}, {}});
 
+  // add -default-symver
+  SmallVector<SymbolVersion, 0> locals;
+  SmallVector<SymbolVersion, 0> globals;
+  globals.push_back({ "*", false, true });
+  // Create a new version definition and add that to the global symbols.
+  VersionDefinition ver;
+  
+  ver.name = config->soName;
+  ver.nonLocalPatterns = std::move(globals);
+  ver.localPatterns = std::move(locals);
+  ver.id = config->versionDefinitions.size();
+  config->versionDefinitions.push_back(ver);
+
+
   // If --retain-symbol-file is used, we'll keep only the symbols listed in
   // the file and discard all others.
   if (auto *arg = args.getLastArg(OPT_retain_symbols_file)) {
@@ -1520,6 +1534,24 @@ static void readConfigs(opt::InputArgList &args) {
     } else {
       error(Twine("cannot find version script ") + arg->getValue());
     }
+
+//  for (auto &vd : config->versionDefinitions) {
+//  	printf("name %.*s\n", vd.name.size(), vd.name.data());
+//  	printf("id %d\n", vd.id);
+//	printf("global:\n");
+//	for (auto &g : vd.nonLocalPatterns) {
+//  		printf("    name: %.*s\n", g.name.size(), g.name);
+//  		printf("    extern: %d\n", g.isExternCpp);
+//  		printf("    hasWildcard: %d\n", g.hasWildcard);
+//	}
+//	printf("local:\n");
+//	for (auto &g : vd.localPatterns) {
+//  		printf("    name: %.*s\n", g.name.size(), g.name);
+//  		printf("    extern: %d\n", g.isExternCpp);
+//  		printf("    hasWildcard: %d\n", g.hasWildcard);
+//	}
+//	printf("\n");
+//  }
 }
 
 // Some Config members do not directly correspond to any particular

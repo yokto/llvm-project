@@ -47,7 +47,7 @@ static void emutls_shutdown(emutls_address_array *array);
 
 #ifndef _WIN32
 
-#include <thread.h>
+#include <threads.h>
 
 static mtx_t emutls_mutex;
 static tss_t emutls_pthread_key;
