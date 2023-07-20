@@ -21,6 +21,8 @@
 #ifndef LLVM_SUPPORT_ALIGNMENT_H_
 #define LLVM_SUPPORT_ALIGNMENT_H_
 
+#include <stdio.h>
+
 #include "llvm/Support/MathExtras.h"
 #include <cassert>
 #include <optional>
@@ -123,18 +125,24 @@ public:
   MaybeAlign() = default;
   /// Do not perform checks in case of copy/move construct/assign, because the
   /// checks have been performed when building `Other`.
-  MaybeAlign(const MaybeAlign &Other) = default;
+  MaybeAlign(const MaybeAlign &Other): UP(Other) {
+	  printf("copy %lx\n", this->valueOrOne().value());
+  }
   MaybeAlign &operator=(const MaybeAlign &Other) = default;
-  MaybeAlign(MaybeAlign &&Other) = default;
+  MaybeAlign(MaybeAlign &&Other): UP(std::move(Other)) {
+	  printf("move %lx\n", this->valueOrOne().value());
+  };
   MaybeAlign &operator=(MaybeAlign &&Other) = default;
 
   constexpr MaybeAlign(std::nullopt_t None) : UP(None) {}
   constexpr MaybeAlign(Align Value) : UP(Value) {}
-  explicit MaybeAlign(uint64_t Value) {
+  explicit MaybeAlign(uint64_t Value) : UP() {
     assert((Value == 0 || llvm::isPowerOf2_64(Value)) &&
            "Alignment is neither 0 nor a power of 2");
     if (Value)
       emplace(Value);
+    printf("MaybeAlign %lx\n", Value);
+    printf("MaybeAlign value or One %lx\n", this->valueOrOne().value());
   }
 
   /// For convenience, returns a valid alignment or 1 if undefined.

@@ -59,9 +59,9 @@ endif()
 # Some files depend on libc++ internals.
 include_directories("${LIBCXXABI_LIBCXX_PATH}/src")
 
-if (LIBCXXABI_HAS_CXA_THREAD_ATEXIT_IMPL)
-  add_definitions(-DHAVE___CXA_THREAD_ATEXIT_IMPL)
-endif()
+#if (LIBCXXABI_HAS_CXA_THREAD_ATEXIT_IMPL)
+#  add_definitions(-DHAVE___CXA_THREAD_ATEXIT_IMPL)
+#endif()
 
 if (LIBCXXABI_ENABLE_FORGIVING_DYNAMIC_CAST)
   add_definitions(-D_LIBCXXABI_FORGIVING_DYNAMIC_CAST)
