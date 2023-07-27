@@ -49,9 +49,9 @@ __throw_bad_alloc()
 
 }  // std
 
-#if !defined(__GLIBCXX__) &&                                                   \
-    !defined(_LIBCPP_ABI_VCRUNTIME) &&      \
-    !defined(_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS)
+#if true //!defined(__GLIBCXX__) &&                                                   \
+    //!defined(_LIBCPP_ABI_VCRUNTIME) &&      \
+    //!defined(_LIBCPP_DISABLE_NEW_DELETE_DEFINITIONS)
 
 // Implement all new and delete operators as weak definitions
 // in this shared library, so that they can be overridden by programs

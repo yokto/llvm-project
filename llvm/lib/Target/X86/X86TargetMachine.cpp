@@ -10,6 +10,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <stdio.h>
 #include "X86TargetMachine.h"
 #include "MCTargetDesc/X86MCTargetDesc.h"
 #include "TargetInfo/X86TargetInfo.h"
@@ -329,10 +330,16 @@ X86TargetMachine::getSubtargetImpl(const Function &F) const {
     // This needs to be done before we create a new subtarget since any
     // creation will depend on the TM and the code generation flags on the
     // function that reside in TargetOptions.
+
+    // !!! IMPORTANT: for some reason this argument is passed incorrectly if i don't have some evaluation statement here. Its super weird
+    MaybeAlign a(F.getParent()->getOverrideStackAlignment());
+    volatile uint64_t throwaway = a.valueOrOne().value();
+    //p rintf("has value %b\n", ((std::optional<Align>)a).has_value());
+    // !!! END IMPORTANT
     resetTargetOptions(F);
     I = std::make_unique<X86Subtarget>(
         TargetTriple, CPU, TuneCPU, FS, *this,
-        MaybeAlign(F.getParent()->getOverrideStackAlignment()),
+        a,
         PreferVectorWidthOverride, RequiredVectorWidth);
   }
   return I.get();

@@ -125,13 +125,9 @@ public:
   MaybeAlign() = default;
   /// Do not perform checks in case of copy/move construct/assign, because the
   /// checks have been performed when building `Other`.
-  MaybeAlign(const MaybeAlign &Other): UP(Other) {
-	  printf("copy %lx\n", this->valueOrOne().value());
-  }
+  MaybeAlign(const MaybeAlign &Other) = default;
   MaybeAlign &operator=(const MaybeAlign &Other) = default;
-  MaybeAlign(MaybeAlign &&Other): UP(std::move(Other)) {
-	  printf("move %lx\n", this->valueOrOne().value());
-  };
+  MaybeAlign(MaybeAlign &&Other) = default;
   MaybeAlign &operator=(MaybeAlign &&Other) = default;
 
   constexpr MaybeAlign(std::nullopt_t None) : UP(None) {}
@@ -141,8 +137,6 @@ public:
            "Alignment is neither 0 nor a power of 2");
     if (Value)
       emplace(Value);
-    printf("MaybeAlign %lx\n", Value);
-    printf("MaybeAlign value or One %lx\n", this->valueOrOne().value());
   }
 
   /// For convenience, returns a valid alignment or 1 if undefined.

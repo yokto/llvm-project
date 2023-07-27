@@ -495,7 +495,7 @@ void tools::gnutools::Linker::ConstructJob(Compilation &C, const JobAction &JA,
 
   if (!Args.hasArg(options::OPT_nostdlib, options::OPT_nostartfiles,
                    options::OPT_r)) {
-    if (!isAndroid && !IsIAMCU) {
+    if (false && !isAndroid && !IsIAMCU) {
       const char *crt1 = nullptr;
       if (!Args.hasArg(options::OPT_shared)) {
         if (Args.hasArg(options::OPT_pg))
@@ -687,7 +687,7 @@ void tools::gnutools::Linker::ConstructJob(Compilation &C, const JobAction &JA,
         }
         CmdArgs.push_back(Args.MakeArgString(P));
       }
-      if (!isAndroid)
+      if (false && !isAndroid)
         CmdArgs.push_back(Args.MakeArgString(ToolChain.GetFilePath("crtn.o")));
     }
   }

@@ -11,6 +11,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "stdio.h"
+#include "iostream"
 #include "X86Subtarget.h"
 #include "MCTargetDesc/X86BaseInfo.h"
 #include "X86.h"
@@ -289,7 +290,6 @@ void X86Subtarget::initSubtargetFeatures(StringRef CPU, StringRef TuneCPU,
   // Stack alignment is 16 bytes on Darwin, Linux, kFreeBSD, NaCl, and for all
   // 64-bit targets.  On Solaris (32-bit), stack alignment is 4 bytes
   // following the i386 psABI, while on Illumos it is always 16 bytes.
-  printf("inside override %lu\n", StackAlignOverride.valueOrOne().value());
   if (StackAlignOverride)
     stackAlignment = *StackAlignOverride;
   else if (isTargetDarwin() || isTargetLinux() || isTargetKFreeBSD() ||
@@ -325,8 +325,9 @@ X86Subtarget::X86Subtarget(const Triple &TT, StringRef CPU, StringRef TuneCPU,
       InstrInfo(initializeSubtargetDependencies(CPU, TuneCPU, FS)),
       TLInfo(TM, *this), FrameLowering(*this, getStackAlignment()) {
   // Determine the PICStyle based on the target selected.
-  printf("inside override %lu\n", StackAlignOverride.valueOrOne().value());
   if (StackAlignOverride.valueOrOne().value() > 1024) {
+    printf("inside override %lx\n\n\n\n\n\n", StackAlignOverride.valueOrOne().value());
+    fflush(stdout);
     report_fatal_error("StackAlignOverride probably wrong");
   }
   if (!isPositionIndependent())
