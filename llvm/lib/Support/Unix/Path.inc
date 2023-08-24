@@ -27,9 +27,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-#ifdef HAVE_SYS_MMAN_H
+//#ifdef HAVE_SYS_MMAN_H
 #include <sys/mman.h>
-#endif
+//#endif
 
 #include <dirent.h>
 #include <pwd.h>
@@ -73,43 +73,43 @@ extern char **environ;
 #endif
 
 #include <sys/types.h>
-#if !defined(__APPLE__) && !defined(__OpenBSD__) && !defined(__FreeBSD__) &&   \
-    !defined(__linux__) && !defined(__FreeBSD_kernel__) && !defined(_AIX)
-#include <sys/statvfs.h>
-#define STATVFS statvfs
-#define FSTATVFS fstatvfs
-#define STATVFS_F_FRSIZE(vfs) vfs.f_frsize
-#else
-#if defined(__OpenBSD__) || defined(__FreeBSD__)
-#include <sys/mount.h>
-#include <sys/param.h>
-#elif defined(__linux__)
-#if defined(HAVE_LINUX_MAGIC_H)
-#include <linux/magic.h>
-#else
-#if defined(HAVE_LINUX_NFS_FS_H)
-#include <linux/nfs_fs.h>
-#endif
-#if defined(HAVE_LINUX_SMB_H)
-#include <linux/smb.h>
-#endif
-#endif
+//#if !defined(__APPLE__) && !defined(__OpenBSD__) && !defined(__FreeBSD__) &&   \
+//    !defined(__linux__) && !defined(__FreeBSD_kernel__) && !defined(_AIX)
+//#include <sys/statvfs.h>
+//#define STATVFS statvfs
+//#define FSTATVFS fstatvfs
+//#define STATVFS_F_FRSIZE(vfs) vfs.f_frsize
+//#else
+//#if defined(__OpenBSD__) || defined(__FreeBSD__)
+//#include <sys/mount.h>
+//#include <sys/param.h>
+//#elif defined(__linux__)
+//#if defined(HAVE_LINUX_MAGIC_H)
+//#include <linux/magic.h>
+//#else
+//#if defined(HAVE_LINUX_NFS_FS_H)
+//#include <linux/nfs_fs.h>
+//#endif
+//#if defined(HAVE_LINUX_SMB_H)
+//#include <linux/smb.h>
+//#endif
+//#endif
 #include <sys/vfs.h>
-#elif defined(_AIX)
-#include <sys/statfs.h>
+//#elif defined(_AIX)
+//#include <sys/statfs.h>
 
 // <sys/vmount.h> depends on `uint` to be a typedef from <sys/types.h> to
 // `uint_t`; however, <sys/types.h> does not always declare `uint`. We provide
 // the typedef prior to including <sys/vmount.h> to work around this issue.
-typedef uint_t uint;
-#include <sys/vmount.h>
-#else
+//typedef unsigned int uint;
+//#include <sys/vmount.h>
+//#else
 #include <sys/mount.h>
-#endif
+//#endif
 #define STATVFS statfs
 #define FSTATVFS fstatfs
 #define STATVFS_F_FRSIZE(vfs) static_cast<uint64_t>(vfs.f_bsize)
-#endif
+//#endif
 
 #if defined(__NetBSD__) || defined(__DragonFly__) || defined(__GNU__) ||       \
     defined(__MVS__)
@@ -253,7 +253,7 @@ std::string getMainExecutableImpl(const char *argv0, void *MainAddr) {
 #elif defined(__linux__) || defined(__CYGWIN__) || defined(__gnu_hurd__)
   char exe_path[PATH_MAX];
   const char *aPath = "/proc/self/exe";
-  if (sys::fs::exists(aPath)) {
+  if (false && sys::fs::exists(aPath)) {
     // /proc is not always mounted under Linux (chroot for example).
     ssize_t len = readlink(aPath, exe_path, sizeof(exe_path));
     if (len < 0)
@@ -952,7 +952,7 @@ ErrorOr<basic_file_status> directory_entry::status() const {
 // Linux. The thing to use is realpath.
 //
 #if !defined(__FreeBSD__)
-#define TRY_PROC_SELF_FD
+// #define TRY_PROC_SELF_FD
 #endif
 
 #if !defined(F_GETPATH) && defined(TRY_PROC_SELF_FD)

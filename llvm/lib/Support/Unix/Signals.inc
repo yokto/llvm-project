@@ -245,8 +245,9 @@ static const int InfoSigs[] = {SIGUSR1
 #endif
 };
 
-static const size_t NumSigs = std::size(IntSigs) + std::size(KillSigs) +
-                              std::size(InfoSigs) + 1 /* SIGPIPE */;
+
+static const size_t NumSigs = 100; //std::size(IntSigs) + std::size(KillSigs) +
+                              //std::size(InfoSigs) + 1 /* SIGPIPE */;
 
 static std::atomic<unsigned> NumRegisteredSignals = ATOMIC_VAR_INIT(0);
 static struct {
@@ -289,51 +290,51 @@ static void RegisterHandlers() { // Not signal-safe.
   // The mutex prevents other threads from registering handlers while we're
   // doing it. We also have to protect the handlers and their count because
   // a signal handler could fire while we're registeting handlers.
-  static ManagedStatic<sys::SmartMutex<true>> SignalHandlerRegistrationMutex;
-  sys::SmartScopedLock<true> Guard(*SignalHandlerRegistrationMutex);
-
-  // If the handlers are already registered, we're done.
-  if (NumRegisteredSignals.load() != 0)
-    return;
-
-  // Create an alternate stack for signal handling. This is necessary for us to
-  // be able to reliably handle signals due to stack overflow.
-  CreateSigAltStack();
-
-  enum class SignalKind { IsKill, IsInfo };
-  auto registerHandler = [&](int Signal, SignalKind Kind) {
-    unsigned Index = NumRegisteredSignals.load();
-    assert(Index < std::size(RegisteredSignalInfo) &&
-           "Out of space for signal handlers!");
-
-    struct sigaction NewHandler;
-
-    switch (Kind) {
-    case SignalKind::IsKill:
-      NewHandler.sa_handler = SignalHandler;
-      NewHandler.sa_flags = SA_NODEFER | SA_RESETHAND | SA_ONSTACK;
-      break;
-    case SignalKind::IsInfo:
-      NewHandler.sa_handler = InfoSignalHandler;
-      NewHandler.sa_flags = SA_ONSTACK;
-      break;
-    }
-    sigemptyset(&NewHandler.sa_mask);
-
-    // Install the new handler, save the old one in RegisteredSignalInfo.
-    sigaction(Signal, &NewHandler, &RegisteredSignalInfo[Index].SA);
-    RegisteredSignalInfo[Index].SigNo = Signal;
-    ++NumRegisteredSignals;
-  };
-
-  for (auto S : IntSigs)
-    registerHandler(S, SignalKind::IsKill);
-  for (auto S : KillSigs)
-    registerHandler(S, SignalKind::IsKill);
-  if (OneShotPipeSignalFunction)
-    registerHandler(SIGPIPE, SignalKind::IsKill);
-  for (auto S : InfoSigs)
-    registerHandler(S, SignalKind::IsInfo);
+//  static ManagedStatic<sys::SmartMutex<true>> SignalHandlerRegistrationMutex;
+//  sys::SmartScopedLock<true> Guard(*SignalHandlerRegistrationMutex);
+//
+//  // If the handlers are already registered, we're done.
+//  if (NumRegisteredSignals.load() != 0)
+//    return;
+//
+//  // Create an alternate stack for signal handling. This is necessary for us to
+//  // be able to reliably handle signals due to stack overflow.
+//  CreateSigAltStack();
+//
+//  enum class SignalKind { IsKill, IsInfo };
+//  auto registerHandler = [&](int Signal, SignalKind Kind) {
+//    unsigned Index = NumRegisteredSignals.load();
+//    assert(Index < std::size(RegisteredSignalInfo) &&
+//           "Out of space for signal handlers!");
+//
+//    struct sigaction NewHandler;
+//
+//    switch (Kind) {
+//    case SignalKind::IsKill:
+//      NewHandler.sa_handler = SignalHandler;
+//      NewHandler.sa_flags = SA_NODEFER | SA_RESETHAND | SA_ONSTACK;
+//      break;
+//    case SignalKind::IsInfo:
+//      NewHandler.sa_handler = InfoSignalHandler;
+//      NewHandler.sa_flags = SA_ONSTACK;
+//      break;
+//    }
+//    sigemptyset(&NewHandler.sa_mask);
+//
+//    // Install the new handler, save the old one in RegisteredSignalInfo.
+//    sigaction(Signal, &NewHandler, &RegisteredSignalInfo[Index].SA);
+//    RegisteredSignalInfo[Index].SigNo = Signal;
+//    ++NumRegisteredSignals;
+//  };
+//
+//  for (auto S : IntSigs)
+//    registerHandler(S, SignalKind::IsKill);
+//  for (auto S : KillSigs)
+//    registerHandler(S, SignalKind::IsKill);
+//  if (OneShotPipeSignalFunction)
+//    registerHandler(SIGPIPE, SignalKind::IsKill);
+//  for (auto S : InfoSigs)
+//    registerHandler(S, SignalKind::IsInfo);
 }
 
 void sys::unregisterHandlers() {
@@ -558,82 +559,82 @@ static int unwindBacktrace(void **StackTrace, int MaxEntries) {
 // On glibc systems we have the 'backtrace' function, which works nicely, but
 // doesn't demangle symbols.
 void llvm::sys::PrintStackTrace(raw_ostream &OS, int Depth) {
-#if ENABLE_BACKTRACES
-  static void *StackTrace[256];
-  int depth = 0;
-#if defined(HAVE_BACKTRACE)
-  // Use backtrace() to output a backtrace on Linux systems with glibc.
-  if (!depth)
-    depth = backtrace(StackTrace, static_cast<int>(std::size(StackTrace)));
-#endif
-#if defined(HAVE__UNWIND_BACKTRACE)
-  // Try _Unwind_Backtrace() if backtrace() failed.
-  if (!depth)
-    depth =
-        unwindBacktrace(StackTrace, static_cast<int>(std::size(StackTrace)));
-#endif
-  if (!depth)
-    return;
-  // If "Depth" is not provided by the caller, use the return value of
-  // backtrace() for printing a symbolized stack trace.
-  if (!Depth)
-    Depth = depth;
-  if (printSymbolizedStackTrace(Argv0, StackTrace, Depth, OS))
-    return;
-  OS << "Stack dump without symbol names (ensure you have llvm-symbolizer in "
-        "your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point "
-        "to it):\n";
-#if HAVE_DLFCN_H && HAVE_DLADDR
-  int width = 0;
-  for (int i = 0; i < depth; ++i) {
-    Dl_info dlinfo;
-    dladdr(StackTrace[i], &dlinfo);
-    const char *name = strrchr(dlinfo.dli_fname, '/');
-
-    int nwidth;
-    if (!name)
-      nwidth = strlen(dlinfo.dli_fname);
-    else
-      nwidth = strlen(name) - 1;
-
-    if (nwidth > width)
-      width = nwidth;
-  }
-
-  for (int i = 0; i < depth; ++i) {
-    Dl_info dlinfo;
-    dladdr(StackTrace[i], &dlinfo);
-
-    OS << format("%-2d", i);
-
-    const char *name = strrchr(dlinfo.dli_fname, '/');
-    if (!name)
-      OS << format(" %-*s", width, dlinfo.dli_fname);
-    else
-      OS << format(" %-*s", width, name + 1);
-
-    OS << format(" %#0*lx", (int)(sizeof(void *) * 2) + 2,
-                 (unsigned long)StackTrace[i]);
-
-    if (dlinfo.dli_sname != nullptr) {
-      OS << ' ';
-      int res;
-      char *d = itaniumDemangle(dlinfo.dli_sname, nullptr, nullptr, &res);
-      if (!d)
-        OS << dlinfo.dli_sname;
-      else
-        OS << d;
-      free(d);
-
-      OS << format(" + %tu", (static_cast<const char *>(StackTrace[i]) -
-                              static_cast<const char *>(dlinfo.dli_saddr)));
-    }
-    OS << '\n';
-  }
-#elif defined(HAVE_BACKTRACE)
-  backtrace_symbols_fd(StackTrace, Depth, STDERR_FILENO);
-#endif
-#endif
+//#if ENABLE_BACKTRACES
+//  static void *StackTrace[256];
+//  int depth = 0;
+//#if defined(HAVE_BACKTRACE)
+//  // Use backtrace() to output a backtrace on Linux systems with glibc.
+////  if (!depth)
+////    depth = backtrace(StackTrace, static_cast<int>(std::size(StackTrace)));
+//#endif
+//#if defined(HAVE__UNWIND_BACKTRACE)
+//  // Try _Unwind_Backtrace() if backtrace() failed.
+//  if (!depth)
+//    depth =
+//        unwindBacktrace(StackTrace, static_cast<int>(std::size(StackTrace)));
+//#endif
+//  if (!depth)
+//    return;
+//  // If "Depth" is not provided by the caller, use the return value of
+//  // backtrace() for printing a symbolized stack trace.
+//  if (!Depth)
+//    Depth = depth;
+//  if (printSymbolizedStackTrace(Argv0, StackTrace, Depth, OS))
+//    return;
+//  OS << "Stack dump without symbol names (ensure you have llvm-symbolizer in "
+//        "your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point "
+//        "to it):\n";
+//#if HAVE_DLFCN_H && HAVE_DLADDR
+//  int width = 0;
+//  for (int i = 0; i < depth; ++i) {
+//    Dl_info dlinfo;
+//    dladdr(StackTrace[i], &dlinfo);
+//    const char *name = strrchr(dlinfo.dli_fname, '/');
+//
+//    int nwidth;
+//    if (!name)
+//      nwidth = strlen(dlinfo.dli_fname);
+//    else
+//      nwidth = strlen(name) - 1;
+//
+//    if (nwidth > width)
+//      width = nwidth;
+//  }
+//
+//  for (int i = 0; i < depth; ++i) {
+//    Dl_info dlinfo;
+//    dladdr(StackTrace[i], &dlinfo);
+//
+//    OS << format("%-2d", i);
+//
+//    const char *name = strrchr(dlinfo.dli_fname, '/');
+//    if (!name)
+//      OS << format(" %-*s", width, dlinfo.dli_fname);
+//    else
+//      OS << format(" %-*s", width, name + 1);
+//
+//    OS << format(" %#0*lx", (int)(sizeof(void *) * 2) + 2,
+//                 (unsigned long)StackTrace[i]);
+//
+//    if (dlinfo.dli_sname != nullptr) {
+//      OS << ' ';
+//      int res;
+//      char *d = itaniumDemangle(dlinfo.dli_sname, nullptr, nullptr, &res);
+//      if (!d)
+//        OS << dlinfo.dli_sname;
+//      else
+//        OS << d;
+//      free(d);
+//
+//      OS << format(" + %tu", (static_cast<const char *>(StackTrace[i]) -
+//                              static_cast<const char *>(dlinfo.dli_saddr)));
+//    }
+//    OS << '\n';
+//  }
+////#elif defined(HAVE_BACKTRACE)
+////  backtrace_symbols_fd(StackTrace, Depth, STDERR_FILENO);
+//#endif
+//#endif
 }
 
 static void PrintStackTraceSignalHandler(void *) {

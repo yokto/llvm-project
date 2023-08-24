@@ -25,7 +25,7 @@
 // Include the platform-specific parts of this class.
 #ifdef LLVM_ON_UNIX
 #include "Unix/Host.inc"
-#include <sched.h>
+//#include <sched.h>
 #endif
 #ifdef _WIN32
 #include "Windows/Host.inc"
@@ -417,7 +417,7 @@ StringRef sys::detail::getHostCPUNameForRISCV(StringRef ProcCpuinfoContent) {
 }
 
 StringRef sys::detail::getHostCPUNameForBPF() {
-#if !defined(__linux__) || !defined(__x86_64__)
+#if 1 // !defined(__linux__) || !defined(__x86_64__)
   return "generic";
 #else
   uint8_t v3_insns[40] __attribute__ ((aligned (8))) =

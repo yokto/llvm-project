@@ -156,18 +156,18 @@ void FileSystem::dump() const { print(dbgs(), PrintType::RecursiveContents); }
 #endif
 
 #ifndef NDEBUG
-static bool isTraversalComponent(StringRef Component) {
-  return Component.equals("..") || Component.equals(".");
-}
-
-static bool pathHasTraversal(StringRef Path) {
-  using namespace llvm::sys;
-
-  for (StringRef Comp : llvm::make_range(path::begin(Path), path::end(Path)))
-    if (isTraversalComponent(Comp))
-      return true;
-  return false;
-}
+//static bool isTraversalComponent(StringRef Component) {
+//  return Component.equals("..") || Component.equals(".");
+//}
+//
+//static bool pathHasTraversal(StringRef Path) {
+//  using namespace llvm::sys;
+//
+//  for (StringRef Comp : llvm::make_range(path::begin(Path), path::end(Path)))
+//    if (isTraversalComponent(Comp))
+//      return true;
+//  return false;
+//}
 #endif
 
 //===-----------------------------------------------------------------------===/
@@ -2269,9 +2269,9 @@ ErrorOr<RedirectingFileSystem::LookupResult>
 RedirectingFileSystem::lookupPathImpl(
     sys::path::const_iterator Start, sys::path::const_iterator End,
     RedirectingFileSystem::Entry *From) const {
-  assert(!isTraversalComponent(*Start) &&
-         !isTraversalComponent(From->getName()) &&
-         "Paths should not contain traversal components");
+//  assert(!isTraversalComponent(*Start) &&
+//         !isTraversalComponent(From->getName()) &&
+//         "Paths should not contain traversal components");
 
   StringRef FromName = From->getName();
 
@@ -2627,7 +2627,7 @@ void YAMLVFSWriter::addEntry(StringRef VirtualPath, StringRef RealPath,
                              bool IsDirectory) {
   assert(sys::path::is_absolute(VirtualPath) && "virtual path not absolute");
   assert(sys::path::is_absolute(RealPath) && "real path not absolute");
-  assert(!pathHasTraversal(VirtualPath) && "path traversal is not supported");
+  //assert(!pathHasTraversal(VirtualPath) && "path traversal is not supported");
   Mappings.emplace_back(VirtualPath, RealPath, IsDirectory);
 }
 

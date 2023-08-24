@@ -92,9 +92,14 @@ endif()
 add_file_dependencies(${CMAKE_CURRENT_SOURCE_DIR}/llvm-config.cpp ${BUILDVARIABLES_OBJPATH})
 
 if(CMAKE_CROSSCOMPILING AND NOT LLVM_CONFIG_PATH)
+  if(LLVM_NATIVE_TOOL_DIR)
+	  set(LLVM_CONFIG_PATH "${LLVM_NATIVE_TOOL_DIR}/llvm-config" CACHE STRING "")
+  else ()
+  
   build_native_tool(llvm-config LLVM_CONFIG_PATH)
   set(LLVM_CONFIG_PATH "${LLVM_CONFIG_PATH}" CACHE STRING "")
 
   add_custom_target(NativeLLVMConfig DEPENDS ${LLVM_CONFIG_PATH})
   add_dependencies(llvm-config NativeLLVMConfig)
+  endif ()
 endif()

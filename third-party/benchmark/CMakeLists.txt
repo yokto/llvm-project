@@ -310,8 +310,11 @@ endif()
 
 cxx_feature_check(STEADY_CLOCK)
 # Ensure we have pthreads
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
+message("foo${LLVM_HOST_TRIPLE}\n\n\n")
+if (NOT (LLVM_HOST_TRIPLE MATCHES "zwolf$"))
+	set(THREADS_PREFER_PTHREAD_FLAG ON)
+	find_package(Threads REQUIRED)
+endif()
 
 if (BENCHMARK_ENABLE_LIBPFM)
   find_package(PFM)

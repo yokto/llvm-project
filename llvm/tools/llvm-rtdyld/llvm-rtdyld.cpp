@@ -368,7 +368,10 @@ TrivialMemoryManager::allocateTLSSection(uintptr_t Size, unsigned Alignment,
   // Get the offset of the TLSSpace in the TLS block by using a tpoff
   // relocation here.
   int64_t TLSOffset;
+  // does not link in zwolf can't be shared for some reason
+#ifndef __ZWOLF__
   asm("leaq LLVMRTDyldTLSSpace@tpoff, %0" : "=r"(TLSOffset));
+#endif
 
   TLSSection Section;
   // We use the storage directly as the initialization image. This means that

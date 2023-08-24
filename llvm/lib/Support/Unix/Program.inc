@@ -171,6 +171,9 @@ toNullTerminatedCStringArray(ArrayRef<StringRef> Strings, StringSaver &Saver) {
   return Result;
 }
 
+#ifdef __ZWOLF__
+#include <base/proc.h>
+#endif
 static bool Execute(ProcessInfo &PI, StringRef Program,
                     ArrayRef<StringRef> Args, std::optional<ArrayRef<StringRef>> Env,
                     ArrayRef<std::optional<StringRef>> Redirects,
@@ -271,6 +274,11 @@ static bool Execute(ProcessInfo &PI, StringRef Program,
   }
 #endif
 
+  std::string PathStr = std::string(Program);
+#ifdef __ZWOLF__
+  uintptr_t child;
+  base_proc_exec(PathStr.c_str(), const_cast<char **>(Argv), const_cast<char **>(Envp), &child);
+#else
   // Create a child process.
   int child = fork();
   switch (child) {
@@ -331,6 +339,7 @@ static bool Execute(ProcessInfo &PI, StringRef Program,
   default:
     break;
   }
+#endif
 
   PI.Pid = child;
   PI.Process = child;
@@ -420,7 +429,9 @@ ProcessInfo llvm::sys::Wait(const ProcessInfo &PI,
     ProcStat->reset();
 
   do {
+#ifndef __ZWOLF__ 
     WaitResult.Pid = sys::wait4(ChildPid, &status, WaitPidOptions, &Info);
+#endif
   } while (WaitUntilTerminates && WaitResult.Pid == -1 && errno == EINTR);
 
   if (WaitResult.Pid != PI.Pid) {

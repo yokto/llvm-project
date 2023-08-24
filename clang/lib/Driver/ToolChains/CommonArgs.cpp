@@ -6,6 +6,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <stdio.h>
 #include "CommonArgs.h"
 #include "Arch/AArch64.h"
 #include "Arch/ARM.h"
@@ -1707,8 +1708,10 @@ static void AddUnwindLibrary(const ToolChain &TC, const Driver &D,
   case ToolChain::UNW_Libgcc: {
     if (LGT == LibGccType::StaticLibGcc)
       CmdArgs.push_back("-lgcc_eh");
-    else
+    else {
+	    printf("\n\n\nunwind gcc_s");
       CmdArgs.push_back("-lgcc_s");
+    }
     break;
   }
   case ToolChain::UNW_CompilerRT:

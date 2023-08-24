@@ -1340,6 +1340,10 @@ macro(llvm_add_tool project name)
                 RUNTIME DESTINATION ${${project}_TOOLS_INSTALL_DIR}
                 COMPONENT ${name})
 
+       if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
+	set_property(TARGET ${name} APPEND_STRING PROPERTY
+		LINK_FLAGS " -Wl,-soname,llvm/${${project}_TOOLS_INSTALL_DIR}/${name}")
+endif()
         if (NOT LLVM_ENABLE_IDE)
           add_llvm_install_targets(install-${name}
                                   DEPENDS ${name}

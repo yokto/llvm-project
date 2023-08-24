@@ -342,7 +342,7 @@ void* __libcpp_aligned_alloc(std::size_t __alignment, std::size_t __size) {
 #if defined(_LIBCPP_MSVCRT_LIKE)
   return ::_aligned_malloc(__size, __alignment);
 #else
-  return ::aligned_alloc(__size, __alignment);
+  return ::aligned_alloc(__alignment, __size);
 #endif
 }
 

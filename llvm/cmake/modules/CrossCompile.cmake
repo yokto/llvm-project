@@ -3,7 +3,6 @@ include(LLVMExternalProjectUtils)
 
 
 function(llvm_create_cross_target project_name target_name toolchain buildtype)
-
   if(NOT DEFINED ${project_name}_${target_name}_BUILD)
     set(${project_name}_${target_name}_BUILD
       "${CMAKE_CURRENT_BINARY_DIR}/${target_name}")

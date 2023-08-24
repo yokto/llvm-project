@@ -25,9 +25,9 @@
 #ifdef HAVE_SYS_RESOURCE_H
 #include <sys/resource.h>
 #endif
-#ifdef HAVE_SYS_STAT_H
+//#ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
-#endif
+//#endif
 #if HAVE_SIGNAL_H
 #include <signal.h>
 #endif
@@ -46,6 +46,8 @@
 #ifdef HAVE_TERMIOS_H
 #include <termios.h>
 #endif
+#include <cstdlib>
+#include <unistd.h>
 
 //===----------------------------------------------------------------------===//
 //=== WARNING: Implementation here must contain only generic UNIX code that
@@ -78,10 +80,10 @@ Process::Pid Process::getProcessId() {
 Expected<unsigned> Process::getPageSize() {
 #if defined(HAVE_GETPAGESIZE)
   static const int page_size = ::getpagesize();
-#elif defined(HAVE_SYSCONF)
+#elif true // defined(HAVE_SYSCONF)
   static long page_size = ::sysconf(_SC_PAGE_SIZE);
 #else
-#error Cannot get the page size on this machine
+//#error Cannot get the page size on this machine
 #endif
   if (page_size == -1)
     return errorCodeToError(std::error_code(errno, std::generic_category()));
@@ -208,6 +210,7 @@ std::error_code Process::FixupStandardFileDescriptors() {
   for (int StandardFD : StandardFDs) {
     struct stat st;
     errno = 0;
+  fflush(stdout);
     if (RetryAfterSignal(-1, ::fstat, StandardFD, &st) < 0) {
       assert(errno && "expected errno to be set if fstat failed!");
       // fstat should return EBADF if the file descriptor is closed.
@@ -424,26 +427,27 @@ const char *Process::ResetColor() { return "\033[0m"; }
 
 #if !HAVE_DECL_ARC4RANDOM
 static unsigned GetRandomNumberSeed() {
-  // Attempt to get the initial seed from /dev/urandom, if possible.
-  int urandomFD = open("/dev/urandom", O_RDONLY);
-
-  if (urandomFD != -1) {
-    unsigned seed;
-    // Don't use a buffered read to avoid reading more data
-    // from /dev/urandom than we need.
-    int count = read(urandomFD, (void *)&seed, sizeof(seed));
-
-    close(urandomFD);
-
-    // Return the seed if the read was successful.
-    if (count == sizeof(seed))
-      return seed;
-  }
-
-  // Otherwise, swizzle the current time and the process ID to form a reasonable
-  // seed.
-  const auto Now = std::chrono::high_resolution_clock::now();
-  return hash_combine(Now.time_since_epoch().count(), ::getpid());
+	return rand() & ((1<<16)-1) + (rand() & ((1<<16)-1)) * (1<<16);
+//  // Attempt to get the initial seed from /dev/urandom, if possible.
+//  int urandomFD = open("/dev/urandom", O_RDONLY);
+//
+//  if (urandomFD != -1) {
+//    unsigned seed;
+//    // Don't use a buffered read to avoid reading more data
+//    // from /dev/urandom than we need.
+//    int count = read(urandomFD, (void *)&seed, sizeof(seed));
+//
+//    close(urandomFD);
+//
+//    // Return the seed if the read was successful.
+//    if (count == sizeof(seed))
+//      return seed;
+//  }
+//
+//  // Otherwise, swizzle the current time and the process ID to form a reasonable
+//  // seed.
+//  const auto Now = std::chrono::high_resolution_clock::now();
+//  return hash_combine(Now.time_since_epoch().count(), ::getpid());
 }
 #endif
 

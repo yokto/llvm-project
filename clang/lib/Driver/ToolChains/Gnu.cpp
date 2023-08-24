@@ -584,7 +584,7 @@ void tools::gnutools::Linker::ConstructJob(Compilation &C, const JobAction &JA,
       if (OnlyLibstdcxxStatic)
         CmdArgs.push_back("-Bdynamic");
     }
-    //CmdArgs.push_back("-lm");
+    CmdArgs.push_back("-lm");
   }
 
   // Silence warnings when linking C code with a C++ '-stdlib' argument.

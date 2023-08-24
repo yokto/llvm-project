@@ -21,18 +21,18 @@
 #include <system_error>
 #include <utility>
 
-//#if defined(_LIBCPP_WIN32API)
-//# define WIN32_LEAN_AND_MEAN
-//# define NOMINMAX
-//# include <windows.h>
-//#else
-//# include <dirent.h>   // for DIR & friends
-//# include <fcntl.h>    /* values for fchmodat */
-//# include <sys/stat.h>
-//# include <sys/statvfs.h>
-//# include <sys/time.h> // for ::utimes as used in __last_write_time
-//# include <unistd.h>
-//#endif // defined(_LIBCPP_WIN32API)
+#if defined(_LIBCPP_WIN32API)
+# define WIN32_LEAN_AND_MEAN
+# define NOMINMAX
+# include <windows.h>
+#else
+# include <dirent.h>   // for DIR & friends
+# include <fcntl.h>    /* values for fchmodat */
+# include <sys/stat.h>
+# include <sys/statvfs.h>
+# include <sys/time.h> // for ::utimes as used in __last_write_time
+# include <unistd.h>
+#endif // defined(_LIBCPP_WIN32API)
 
 #include "../include/apple_availability.h"
 

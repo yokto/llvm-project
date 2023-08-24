@@ -19,7 +19,7 @@
 #include "llvm/Config/config.h"
 #include <cctype>
 #include <string>
-#include <sys/utsname.h>
+//#include <sys/utsname.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -28,48 +28,50 @@
 using namespace llvm;
 
 static std::string getOSVersion() {
-  struct utsname info;
-
-  if (uname(&info))
-    return "";
-
-  return info.release;
+  return "zwolf";
+//  struct utsname info;
+//
+//  if (uname(&info))
+//    return "";
+//
+//  return info.release;
 }
 
 static std::string updateTripleOSVersion(std::string TargetTripleString) {
+  return "x86_64-unknown-linux-zwolf";
   // On darwin, we want to update the version to match that of the target.
-  std::string::size_type DarwinDashIdx = TargetTripleString.find("-darwin");
-  if (DarwinDashIdx != std::string::npos) {
-    TargetTripleString.resize(DarwinDashIdx + strlen("-darwin"));
-    TargetTripleString += getOSVersion();
-    return TargetTripleString;
-  }
-  std::string::size_type MacOSDashIdx = TargetTripleString.find("-macos");
-  if (MacOSDashIdx != std::string::npos) {
-    TargetTripleString.resize(MacOSDashIdx);
-    // Reset the OS to darwin as the OS version from `uname` doesn't use the
-    // macOS version scheme.
-    TargetTripleString += "-darwin";
-    TargetTripleString += getOSVersion();
-  }
-  // On AIX, the AIX version and release should be that of the current host
-  // unless if the version has already been specified.
-  if (Triple(LLVM_HOST_TRIPLE).getOS() == Triple::AIX) {
-    Triple TT(TargetTripleString);
-    if (TT.getOS() == Triple::AIX && !TT.getOSMajorVersion()) {
-      struct utsname name;
-      if (uname(&name) != -1) {
-        std::string NewOSName = std::string(Triple::getOSTypeName(Triple::AIX));
-        NewOSName += name.version;
-        NewOSName += '.';
-        NewOSName += name.release;
-        NewOSName += ".0.0";
-        TT.setOSName(NewOSName);
-        return TT.str();
-      }
-    }
-  }
-  return TargetTripleString;
+//  std::string::size_type DarwinDashIdx = TargetTripleString.find("-darwin");
+//  if (DarwinDashIdx != std::string::npos) {
+//    TargetTripleString.resize(DarwinDashIdx + strlen("-darwin"));
+//    TargetTripleString += getOSVersion();
+//    return TargetTripleString;
+//  }
+//  std::string::size_type MacOSDashIdx = TargetTripleString.find("-macos");
+//  if (MacOSDashIdx != std::string::npos) {
+//    TargetTripleString.resize(MacOSDashIdx);
+//    // Reset the OS to darwin as the OS version from `uname` doesn't use the
+//    // macOS version scheme.
+//    TargetTripleString += "-darwin";
+//    TargetTripleString += getOSVersion();
+//  }
+//  // On AIX, the AIX version and release should be that of the current host
+//  // unless if the version has already been specified.
+//  if (Triple(LLVM_HOST_TRIPLE).getOS() == Triple::AIX) {
+//    Triple TT(TargetTripleString);
+//    if (TT.getOS() == Triple::AIX && !TT.getOSMajorVersion()) {
+//      struct utsname name;
+//      if (uname(&name) != -1) {
+//        std::string NewOSName = std::string(Triple::getOSTypeName(Triple::AIX));
+//        NewOSName += name.version;
+//        NewOSName += '.';
+//        NewOSName += name.release;
+//        NewOSName += ".0.0";
+//        TT.setOSName(NewOSName);
+//        return TT.str();
+//      }
+//    }
+//  }
+//  return TargetTripleString;
 }
 
 std::string sys::getDefaultTargetTriple() {

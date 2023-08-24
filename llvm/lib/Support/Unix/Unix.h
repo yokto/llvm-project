@@ -31,10 +31,11 @@
 #include <string>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <time.h>
 
-#ifdef HAVE_UNISTD_H
+//#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+//#endif
 
 #ifdef HAVE_SYS_TIME_H
 # include <sys/time.h>

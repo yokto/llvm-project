@@ -124,6 +124,7 @@ static int nope = 0;
 #define	SP(t, s, c)	/* nothing */
 #define	AT(t, p1, p2, s1, s2)	/* nothing */
 #define	NOTE(s)	/* nothing */
+static int nope = 0;
 #endif
 
 /*

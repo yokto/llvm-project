@@ -171,7 +171,10 @@ macro(add_clang_tool name)
         ${export_to_clangtargets}
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
         COMPONENT ${name})
-
+      if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
+	      set_property(TARGET ${name} APPEND_STRING PROPERTY
+		      LINK_FLAGS " -Wl,-soname,llvm/${CMAKE_INSTALL_BINDIR}/${name}")
+      endif()
       if(NOT LLVM_ENABLE_IDE)
         add_llvm_install_targets(install-${name}
                                  DEPENDS ${name}
