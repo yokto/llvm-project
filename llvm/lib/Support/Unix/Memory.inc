@@ -83,6 +83,13 @@ MemoryBlock Memory::allocateMappedMemory(size_t NumBytes,
   int fd;
 #if defined(MAP_ANON)
   fd = -1;
+#elif defined(__ZWOLF__)
+  void * Add = calloc(NumBytes, 1);
+  MemoryBlock Result2;
+  Result2.Address = Add;
+  Result2.AllocatedSize = NumBytes;
+  Result2.Flags = PFlags;
+  return Result2;
 #else
   fd = open("/dev/zero", O_RDWR);
   if (fd == -1) {
@@ -149,6 +156,10 @@ MemoryBlock Memory::allocateMappedMemory(size_t NumBytes,
 }
 
 std::error_code Memory::releaseMappedMemory(MemoryBlock &M) {
+#ifdef __ZWOLF__
+  free(M.Address);
+  return std::error_code();
+#endif
   if (M.Address == nullptr || M.AllocatedSize == 0)
     return std::error_code();
 

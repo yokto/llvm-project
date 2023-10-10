@@ -16,6 +16,7 @@
 //===          is guaranteed to work on *all* UNIX variants.
 //===----------------------------------------------------------------------===//
 
+#include <stdio.h>
 #include "llvm/Support/Program.h"
 
 #include "Unix.h"
@@ -277,7 +278,13 @@ static bool Execute(ProcessInfo &PI, StringRef Program,
   std::string PathStr = std::string(Program);
 #ifdef __ZWOLF__
   uintptr_t child;
-  base_proc_exec(PathStr.c_str(), const_cast<char **>(Argv), const_cast<char **>(Envp), &child);
+  char ** origenv = const_cast<char **>(Envp);
+  char * env[1] = { 0 };
+  printf("origenv %p\n", origenv);
+  printf("env %p\n", env);
+
+  fflush(stdout);
+  base_proc_exec(PathStr.c_str(), const_cast<char **>(Argv), origenv ? origenv : env, &child);
 #else
   // Create a child process.
   int child = fork();
@@ -428,11 +435,16 @@ ProcessInfo llvm::sys::Wait(const ProcessInfo &PI,
   if (ProcStat)
     ProcStat->reset();
 
-  do {
 #ifndef __ZWOLF__ 
+  do {
     WaitResult.Pid = sys::wait4(ChildPid, &status, WaitPidOptions, &Info);
-#endif
   } while (WaitUntilTerminates && WaitResult.Pid == -1 && errno == EINTR);
+#else
+  WaitResult.Pid = ChildPid;
+
+  uint8_t status2 = 0;
+  base_proc_wait(ChildPid, &status2);
+  status = status2;
 
   if (WaitResult.Pid != PI.Pid) {
     if (WaitResult.Pid == 0) {
@@ -480,6 +492,7 @@ ProcessInfo llvm::sys::Wait(const ProcessInfo &PI,
 #endif
     *ProcStat = ProcessStatistics{UserT + KernelT, UserT, PeakMemory};
   }
+#endif
 
   // Return the proper exit status. Detect error conditions
   // so we can return -1 for them and set ErrMsg informatively.

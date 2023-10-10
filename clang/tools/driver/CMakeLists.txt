@@ -45,7 +45,7 @@ clang_target_link_libraries(clang
   clangSerialization
   )
 
-if(WIN32 AND NOT CYGWIN)
+if(WIN32 AND NOT CYGWIN OR (LLVM_HOST_TRIPLE MATCHES "zwolf$"))
   # Prevent versioning if the buildhost is targeting for Win32.
 else()
   set_target_properties(clang PROPERTIES VERSION ${CLANG_EXECUTABLE_VERSION})

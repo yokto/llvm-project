@@ -355,6 +355,7 @@ if (NOT PURE_WINDOWS)
 endif()
 
 # This check requires _GNU_SOURCE.
+
 if( HAVE_DLFCN_H )
   if( HAVE_LIBDL )
     list(APPEND CMAKE_REQUIRED_LIBRARIES dl)

@@ -183,7 +183,11 @@ FileOutputBuffer::create(StringRef Path, size_t Size, unsigned Flags) {
   case fs::file_type::regular_file:
   case fs::file_type::file_not_found:
   case fs::file_type::status_error:
+#ifdef __ZWOLF__
+    if (true)
+#else
     if (Flags & F_no_mmap)
+#endif
       return createInMemoryBuffer(Path, Size, Mode);
     else
       return createOnDiskBuffer(Path, Size, Mode);

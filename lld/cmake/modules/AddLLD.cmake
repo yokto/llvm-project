@@ -50,6 +50,10 @@ macro(add_lld_tool name)
       RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
       COMPONENT ${name})
 
+   if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
+	   set_property(TARGET ${name} APPEND_STRING PROPERTY
+		   LINK_FLAGS " -Wl,-soname,llvm/${CMAKE_INSTALL_BINDIR}/${name}")
+   endif()
     if(NOT CMAKE_CONFIGURATION_TYPES)
       add_llvm_install_targets(install-${name}
         DEPENDS ${name}

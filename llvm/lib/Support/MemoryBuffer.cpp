@@ -473,6 +473,7 @@ getOpenFileImpl(sys::fs::file_t FD, const Twine &Filename, uint64_t FileSize,
     MapSize = FileSize;
   }
 
+#ifndef __ZWOLF__
   if (shouldUseMmap(FD, FileSize, MapSize, Offset, RequiresNullTerminator,
                     PageSize, IsVolatile)) {
     std::error_code EC;
@@ -482,6 +483,7 @@ getOpenFileImpl(sys::fs::file_t FD, const Twine &Filename, uint64_t FileSize,
     if (!EC)
       return std::move(Result);
   }
+#endif
 
 #ifdef __MVS__
   // Set codepage auto-conversion for z/OS.

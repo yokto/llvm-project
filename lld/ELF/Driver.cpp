@@ -22,6 +22,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+#include <stdio.h>
 #include "Driver.h"
 #include "Config.h"
 #include "ICF.h"

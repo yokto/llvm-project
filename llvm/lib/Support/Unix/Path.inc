@@ -1016,9 +1016,16 @@ std::error_code openFile(const Twine &Name, int &ResultFD,
   StringRef P = Name.toNullTerminatedStringRef(Storage);
   // Call ::open in a lambda to avoid overload resolution in RetryAfterSignal
   // when open is overloaded, such as in Bionic.
+  volatile int a = 5;
   auto Open = [&]() { return ::open(P.begin(), OpenFlags, Mode); };
-  if ((ResultFD = sys::RetryAfterSignal(-1, Open)) < 0)
+  if ((ResultFD = sys::RetryAfterSignal(-1, Open)) < 0) {
+	  printf("errno %d size %d path %s\n", errno, P.size(), P.begin());
+	  fflush(stdout);
+	  if (errno == 2 && P.size() == 82) {
+		  if (a) { a++; };
+	  }
     return std::error_code(errno, std::generic_category());
+}
 #ifndef O_CLOEXEC
   if (!(Flags & OF_ChildInherit)) {
     int r = fcntl(ResultFD, F_SETFD, FD_CLOEXEC);
