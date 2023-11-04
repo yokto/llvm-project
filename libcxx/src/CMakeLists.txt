@@ -216,7 +216,7 @@ if (LIBCXX_ENABLE_SHARED)
   cxx_set_common_defines(cxx_shared)
 
   set_target_properties(cxx_shared PROPERTIES NO_SONAME 1)
-  target_link_options(cxx_shared PUBLIC "-Wl,-soname,llvm/lib/x86_64-unknown-linux-zwolf/libc++.so")
+  target_link_options(cxx_shared PUBLIC "-Wl,-soname,llvm-libcxx/x86_64/lib/libc++.so")
 
   if(ZOS)
     add_custom_command(TARGET cxx_shared POST_BUILD

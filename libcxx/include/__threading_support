@@ -98,7 +98,7 @@ typedef pthread_key_t __libcpp_tls_key;
 // Mutex
 typedef mtx_t __libcpp_mutex_t;
 // mtx_t is a struct so using {} for initialization is valid.
-#define _LIBCPP_MUTEX_INITIALIZER {}
+#define _LIBCPP_MUTEX_INITIALIZER ((_Atomic uint32_t)0)
 
 typedef mtx_t __libcpp_recursive_mutex_t;
 

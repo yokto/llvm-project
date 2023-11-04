@@ -70,7 +70,9 @@ std::string GetExecutablePath(const char *Argv0, bool CanonicalPrefixes) {
   // This just needs to be some symbol in the binary; C++ doesn't
   // allow taking the address of ::main however.
   void *P = (void*) (intptr_t) GetExecutablePath;
-  return llvm::sys::fs::getMainExecutable(Argv0, P);
+  // some weird bug again like the stack frame
+  std::string ret = llvm::sys::fs::getMainExecutable(Argv0, P);
+  return ret;
 }
 
 static const char *GetStableCStr(std::set<std::string> &SavedStrings,

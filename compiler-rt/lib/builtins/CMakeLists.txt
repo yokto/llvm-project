@@ -237,7 +237,7 @@ option(COMPILER_RT_EXCLUDE_ATOMIC_BUILTIN
 if(NOT FUCHSIA AND NOT COMPILER_RT_BAREMETAL_BUILD)
   set(GENERIC_SOURCES
     ${GENERIC_SOURCES}
-    emutls.c
+    #emutls.c
     enable_execute_stack.c
     eprintf.c
   )

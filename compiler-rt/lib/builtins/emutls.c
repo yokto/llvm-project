@@ -391,7 +391,7 @@ emutls_get_address_array(uintptr_t index) {
 // emulated TLS, to ensure a single copy of its state.
 __attribute__((visibility("default"), weak))
 #endif
-void *__emutls_get_address(__emutls_control *control) {
+void *__emutls_get_address2(__emutls_control *control) {
   uintptr_t index = emutls_get_index(control);
   emutls_address_array *array = emutls_get_address_array(index--);
   if (array->data[index] == NULL)

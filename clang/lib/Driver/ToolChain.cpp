@@ -518,6 +518,12 @@ std::string ToolChain::getCompilerRT(const ArgList &Args, StringRef Component,
   // Check for runtime files in the new layout without the architecture first.
   std::string CRTBasename =
       buildCompilerRTBasename(Args, Component, Type, /*AddArch=*/false);
+  for (const auto &LibPath : getRuntimePaths()) {
+    SmallString<128> P(LibPath);
+    llvm::sys::path::append(P, CRTBasename);
+    if (getVFS().exists(P))
+      return std::string(P.str());
+  }
   for (const auto &LibPath : getLibraryPaths()) {
     SmallString<128> P(LibPath);
     llvm::sys::path::append(P, CRTBasename);
@@ -543,9 +549,15 @@ const char *ToolChain::getCompilerRTArgString(const llvm::opt::ArgList &Args,
 ToolChain::path_list ToolChain::getRuntimePaths() const {
   path_list Paths;
   auto addPathForTriple = [this, &Paths](const llvm::Triple &Triple) {
-    SmallString<128> P(D.ResourceDir);
-    llvm::sys::path::append(P, "lib", Triple.str());
-    Paths.push_back(std::string(P.str()));
+    if (Triple.getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
+	    SmallString<128> P(D.SysRoot);
+	    llvm::sys::path::append(P, "llvm-compiler-rt", llvm::Triple::getArchTypeName(Triple.getArch()), "lib");
+	    Paths.push_back(std::string(P.str()));
+    } else {
+	    SmallString<128> P(D.ResourceDir);
+	    llvm::sys::path::append(P, "lib", Triple.str());
+	    Paths.push_back(std::string(P.str()));
+    }
   };
 
   addPathForTriple(getTriple());

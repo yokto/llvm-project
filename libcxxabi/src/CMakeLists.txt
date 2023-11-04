@@ -192,7 +192,7 @@ if (LIBCXXABI_ENABLE_SHARED)
       VERSION "${LIBCXXABI_LIBRARY_VERSION}"
   )
   set_target_properties(cxxabi_shared PROPERTIES NO_SONAME 1)    
-  target_link_options(cxxabi_shared PRIVATE "-Wl,-soname,llvm/lib/x86_64-unknown-linux-zwolf/libc++abi.so")
+  target_link_options(cxxabi_shared PRIVATE "-Wl,-soname,llvm-libcxx/x86_64/lib/libc++abi.so")
 
 
   if (ZOS)

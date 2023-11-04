@@ -3091,6 +3091,8 @@ Generic_GCC::addLibCxxIncludePaths(const llvm::opt::ArgList &DriverArgs,
   // one of the following two locations:
   if (AddIncludePath(concat(SysRoot, "/usr/local/include")))
     return;
+  if (AddIncludePath(concat(SysRoot, "/llvm-libcxx/common/include")))
+    return;
   if (AddIncludePath(concat(SysRoot, "/usr/include")))
     return;
 }

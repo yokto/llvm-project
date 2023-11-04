@@ -317,6 +317,8 @@ arm::FloatABI arm::getARMFloatABI(const ToolChain &TC, const ArgList &Args) {
 
 arm::FloatABI arm::getDefaultFloatABI(const llvm::Triple &Triple) {
   auto SubArch = getARMSubArchVersionNumber(Triple);
+
+  if (Triple.getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) { return FloatABI::Hard; }
   switch (Triple.getOS()) {
   case llvm::Triple::Darwin:
   case llvm::Triple::MacOSX:

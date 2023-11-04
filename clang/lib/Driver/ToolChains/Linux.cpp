@@ -6,7 +6,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-#include <iostream>
 #include "Linux.h"
 #include "Arch/ARM.h"
 #include "Arch/LoongArch.h"
@@ -265,6 +264,10 @@ Linux::Linux(const Driver &D, const llvm::Triple &Triple, const ArgList &Args)
   // possible permutations of these directories, and seeing which ones it added
   // to the link paths.
   path_list &Paths = getFilePaths();
+  if (Triple.getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
+    addPathIfExists(D, concat(SysRoot, "xlibc", Triple.getArchTypeName(Triple.getArch()), "/lib"), Paths);
+    addPathIfExists(D, concat(SysRoot, "llvm-libcxx", Triple.getArchTypeName(Triple.getArch()), "/lib"), Paths);
+  }
 
   const std::string OSLibDir = std::string(getOSLibDir(Triple, Args));
   const std::string MultiarchTriple = getMultiarchTriple(D, Triple, SysRoot);
@@ -605,6 +608,9 @@ void Linux::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
   if (DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
+  if (getTriple().getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
+    addSystemInclude(DriverArgs, CC1Args, concat(SysRoot, "/xlibc/common/include"));
+  }
   // LOCAL_INCLUDE_DIR
   addSystemInclude(DriverArgs, CC1Args, concat(SysRoot, "/usr/local/include"));
   // TOOL_INCLUDE_DIR
