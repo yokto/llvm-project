@@ -992,6 +992,11 @@ macro(add_llvm_executable name)
   endif()
 
   add_link_opts( ${name} )
+  file(APPEND "/home/silvio/test.txt" "foo ${name} ${ARGN}\n")
+  if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
+	  set_property(TARGET ${name} APPEND_STRING PROPERTY
+		  LINK_FLAGS " -Wl,-soname,llvm/bin/${name}")
+  endif()
 
   # Do not add -Dname_EXPORTS to the command-line when building files in this
   # target. Doing so is actively harmful for the modules build because it

@@ -159,9 +159,10 @@ static int lldMain(int argc, const char **argv, llvm::raw_ostream &stdoutOS,
     else if (f == Wasm)
       return lld::wasm::link;
     else
-      die("lld is a generic driver.\n"
-          "Invoke ld.lld (Unix), ld64.lld (macOS), lld-link (Windows), wasm-ld"
-          " (WebAssembly) instead");
+      return elf::link;
+//      die("lld is a generic driver.\n"
+//          "Invoke ld.lld (Unix), ld64.lld (macOS), lld-link (Windows), wasm-ld"
+//          " (WebAssembly) instead");
   }();
   // Run the driver. If an error occurs, false will be returned.
   bool r = link(args, stdoutOS, stderrOS, exitEarly, inTestOutputDisabled);
