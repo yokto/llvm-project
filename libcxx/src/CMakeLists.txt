@@ -151,7 +151,6 @@ if(NOT LIBCXX_INSTALL_LIBRARY)
   set(exclude_from_all EXCLUDE_FROM_ALL)
 endif()
 
-#add_link_flags("-Wl,-soname=llvm/lib/x86_64-unknown-linux-zwolf/libc++.so")
 
 if (LIBCXX_GENERATE_COVERAGE AND NOT LIBCXX_COVERAGE_LIBRARY)
   find_compiler_rt_library(profile LIBCXX_COVERAGE_LIBRARY)
@@ -216,7 +215,7 @@ if (LIBCXX_ENABLE_SHARED)
   cxx_set_common_defines(cxx_shared)
 
   set_target_properties(cxx_shared PROPERTIES NO_SONAME 1)
-  target_link_options(cxx_shared PUBLIC "-Wl,-soname,llvm-libcxx/x86_64/lib/libc++.so")
+  target_link_options(cxx_shared PUBLIC "-Wl,-soname,llvm-libcxx/${CMAKE_INSTALL_LIBDIR}/libc++.so")
 
   if(ZOS)
     add_custom_command(TARGET cxx_shared POST_BUILD

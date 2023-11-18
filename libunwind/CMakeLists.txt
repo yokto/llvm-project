@@ -128,7 +128,7 @@ else()
   else()
     set(LIBUNWIND_LIBRARY_DIR ${CMAKE_BINARY_DIR}/lib${LIBUNWIND_LIBDIR_SUFFIX})
   endif()
-  set(LIBUNWIND_INSTALL_LIBRARY_DIR lib${LIBUNWIND_LIBDIR_SUFFIX} CACHE PATH
+  set(LIBUNWIND_INSTALL_LIBRARY_DIR ${CMAKE_INSTALL_LIBDIR} CACHE PATH
       "Path where built libunwind libraries should be installed.")
 endif()
 

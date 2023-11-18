@@ -874,8 +874,8 @@ macro(add_llvm_library name)
       get_target_export_arg(${name} LLVM export_to_llvmexports ${umbrella})
       install(TARGETS ${name}
               ${export_to_llvmexports}
-              LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX} COMPONENT ${name}
-              ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX} COMPONENT ${name}
+	      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT ${name}
+              ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT ${name}
               RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT ${name})
 
       if (NOT LLVM_ENABLE_IDE)
@@ -995,7 +995,7 @@ macro(add_llvm_executable name)
   file(APPEND "/home/silvio/test.txt" "foo ${name} ${ARGN}\n")
   if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
 	  set_property(TARGET ${name} APPEND_STRING PROPERTY
-		  LINK_FLAGS " -Wl,-soname,llvm/bin/${name}")
+		  LINK_FLAGS " -Wl,-soname,llvm/${CMAKE_INSTALL_BINDIR}/${name}")
   endif()
 
   # Do not add -Dname_EXPORTS to the command-line when building files in this
@@ -2096,7 +2096,7 @@ function(llvm_install_symlink project name dest)
     set(full_dest llvm${CMAKE_EXECUTABLE_SUFFIX})
   endif()
 
-  set(output_dir "${${project}_TOOLS_INSTALL_DIR}")
+  set(output_dir "${CMAKE_INSTALL_BINDIR}")
 
   install(SCRIPT ${INSTALL_SYMLINK}
           CODE "install_symlink(\"${full_name}\" \"${full_dest}\" \"${output_dir}\")"

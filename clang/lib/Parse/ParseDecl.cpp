@@ -2652,6 +2652,7 @@ static bool isValidAfterIdentifierInDeclarator(const Token &T) {
                    tok::colon);
 }
 
+#include <iostream>
 /// ParseImplicitInt - This method is called when we have an non-typename
 /// identifier in a declspec (which normally terminates the decl spec) when
 /// the declspec has no type specifier.  In this case, the declspec is either

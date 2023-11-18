@@ -190,6 +190,7 @@ macro(add_tablegen target project)
     endif()
   endif()
 
+  message("tablegen dest ${target} ${ADD_TABLEGEN_DESTINATION}\n\n\n\n\n\n")
   if (ADD_TABLEGEN_DESTINATION AND NOT LLVM_INSTALL_TOOLCHAIN_ONLY AND LLVM_BUILD_UTILS)
     set(export_arg)
     if(ADD_TABLEGEN_EXPORT)

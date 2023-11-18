@@ -26,6 +26,7 @@
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallString.h"
 #include <cstring>
+#include <iostream>
 using namespace clang;
 
 
@@ -475,6 +476,7 @@ template <class T> static bool BadSpecifier(T TNew, T TPrev,
                                             unsigned &DiagID,
                                             bool IsExtension = true) {
   PrevSpec = DeclSpec::getSpecifierName(TPrev);
+  std::cout << "foo \n\n\n" << std::endl;
   if (TNew != TPrev)
     DiagID = diag::err_invalid_decl_spec_combination;
   else
@@ -755,6 +757,7 @@ bool DeclSpec::SetTypeSpecType(TST T, SourceLocation TagKwLoc,
     return false;
   if (TypeSpecType != TST_unspecified) {
     PrevSpec = DeclSpec::getSpecifierName((TST) TypeSpecType, Policy);
+  std::cout << "foo2 \n\n\n" << std::endl;
     DiagID = diag::err_invalid_decl_spec_combination;
     return true;
   }
@@ -777,6 +780,7 @@ bool DeclSpec::SetTypeSpecType(TST T, SourceLocation Loc,
     return false;
   if (TypeSpecType != TST_unspecified) {
     PrevSpec = DeclSpec::getSpecifierName((TST) TypeSpecType, Policy);
+  std::cout << "foo3 \n\n\n" << std::endl;
     DiagID = diag::err_invalid_decl_spec_combination;
     return true;
   }
@@ -809,6 +813,7 @@ bool DeclSpec::SetTypeSpecType(TST T, SourceLocation TagKwLoc,
     return false;
   if (TypeSpecType != TST_unspecified) {
     PrevSpec = DeclSpec::getSpecifierName((TST) TypeSpecType, Policy);
+  std::cout << "foo4 \n\n\n" << std::endl;
     DiagID = diag::err_invalid_decl_spec_combination;
     return true;
   }
@@ -839,6 +844,8 @@ bool DeclSpec::SetTypeSpecType(TST T, SourceLocation Loc,
     return false;
   if (TypeSpecType != TST_unspecified) {
     PrevSpec = DeclSpec::getSpecifierName((TST) TypeSpecType, Policy);
+
+  std::cout << "foo6 \n\n\n" << std::endl;
     DiagID = diag::err_invalid_decl_spec_combination;
     return true;
   }
