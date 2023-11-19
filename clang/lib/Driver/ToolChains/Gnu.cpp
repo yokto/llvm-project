@@ -3080,6 +3080,10 @@ Generic_GCC::addLibCxxIncludePaths(const llvm::opt::ArgList &DriverArgs,
     addSystemInclude(DriverArgs, CC1Args, Path + "/c++/" + Version);
     return true;
   };
+  if (getTriple().getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
+    AddIncludePath(concat(SysRoot, "/llvm-libcxx/common/include"));
+    return;
+  }
 
   // Android never uses the libc++ headers installed alongside the toolchain,
   // which are generally incompatible with the NDK libraries anyway.
@@ -3090,8 +3094,6 @@ Generic_GCC::addLibCxxIncludePaths(const llvm::opt::ArgList &DriverArgs,
   // not be found at ../include/c++ but it likely to be found at
   // one of the following two locations:
   if (AddIncludePath(concat(SysRoot, "/usr/local/include")))
-    return;
-  if (AddIncludePath(concat(SysRoot, "/llvm-libcxx/common/include")))
     return;
   if (AddIncludePath(concat(SysRoot, "/usr/include")))
     return;

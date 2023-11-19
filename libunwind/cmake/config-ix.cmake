@@ -91,7 +91,8 @@ int main(void) { return 0; }
 endif()
 
 # Check compiler flags
-check_cxx_compiler_flag(-nostdinc++ CXX_SUPPORTS_NOSTDINCXX_FLAG)
+set(CXX_SUPPORTS_NOSTDINCXX_FLAG 1 CACHE INTERNAL "")
+#check_cxx_compiler_flag(-nostdinc++ CXX_SUPPORTS_NOSTDINCXX_FLAG)
 
 # Check symbols
 check_symbol_exists(__arm__ "" LIBUNWIND_TARGET_ARM)
