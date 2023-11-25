@@ -3081,7 +3081,7 @@ Generic_GCC::addLibCxxIncludePaths(const llvm::opt::ArgList &DriverArgs,
     return true;
   };
   if (getTriple().getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
-    AddIncludePath(concat(SysRoot, "/llvm-libcxx/common/include"));
+    addSystemInclude(DriverArgs, CC1Args, SysRoot + "/llvm-libcxx/common/include/c++/v1");
     return;
   }
 

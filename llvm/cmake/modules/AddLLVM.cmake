@@ -662,7 +662,7 @@ function(llvm_add_library name)
       if(${output_name} STREQUAL "output_name-NOTFOUND")
         set(output_name ${name})
       endif()
-      set(library_name ${output_name}-${LLVM_VERSION_MAJOR}${LLVM_VERSION_SUFFIX})
+      set(library_name ${output_name})
       set(api_name ${output_name}-${LLVM_VERSION_MAJOR}.${LLVM_VERSION_MINOR}.${LLVM_VERSION_PATCH}${LLVM_VERSION_SUFFIX})
       set_target_properties(${name} PROPERTIES OUTPUT_NAME ${library_name})
       if(UNIX)
@@ -709,6 +709,10 @@ function(llvm_add_library name)
     set_property(TARGET ${name} PROPERTY LLVM_LIBTYPE ${libtype})
   endif()
 
+  if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
+         set_property(TARGET ${name} APPEND_STRING PROPERTY
+                 LINK_FLAGS " -Wl,-soname,llvm/${CMAKE_INSTALL_LIBDIR}/lib${name}.so")
+  endif()
   target_link_libraries(${name} ${libtype}
       ${ARG_LINK_LIBS}
       ${lib_deps}

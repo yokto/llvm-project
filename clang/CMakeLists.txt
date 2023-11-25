@@ -20,10 +20,8 @@ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   endif()
 endif()
 
-message("install ${CMAKE_INSTALL_BINDIR}\n\n\n\n\n")
 set(CLANG_TOOLS_INSTALL_DIR "${CMAKE_INSTALL_BINDIR}" CACHE PATH
     "Path for binary subdirectory (defaults to '${CMAKE_INSTALL_BINDIR}')")
-message("install ${CLANG_TOOLS_INSTALL_DIR}\n\n\n\n\n")
 
 # Must go below project(..)
 include(GNUInstallDirs)

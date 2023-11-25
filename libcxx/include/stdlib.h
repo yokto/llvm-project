@@ -110,9 +110,9 @@ extern "C++" {
 
 // MSVCRT already has the correct prototype in <stdlib.h> if __cplusplus is defined
 #if !defined(_LIBCPP_MSVCRT) && !defined(__sun__)
-inline _LIBCPP_INLINE_VISIBILITY long abs(int __x) _NOEXCEPT {
-  return __builtin_abs(__x);
-}
+//inline _LIBCPP_INLINE_VISIBILITY long abs(int __x) _NOEXCEPT {
+//  return __builtin_abs(__x);
+//}
 inline _LIBCPP_INLINE_VISIBILITY long abs(long __x) _NOEXCEPT {
   return __builtin_labs(__x);
 }

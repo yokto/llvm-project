@@ -33,7 +33,7 @@ if(LLVM_BUILD_LLVM_DYLIB)
   add_llvm_library(LLVM SHARED DISABLE_LLVM_LINK_LLVM_DYLIB SONAME ${INSTALL_WITH_TOOLCHAIN} ${SOURCES})
 
   list(REMOVE_DUPLICATES LIB_NAMES)
-  if(("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux") OR (MINGW) OR (HAIKU)
+  if(TRUE OR ("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux") OR (MINGW) OR (HAIKU)
      OR ("${CMAKE_SYSTEM_NAME}" STREQUAL "FreeBSD")
      OR ("${CMAKE_SYSTEM_NAME}" STREQUAL "GNU")
      OR ("${CMAKE_SYSTEM_NAME}" STREQUAL "OpenBSD")
@@ -48,7 +48,7 @@ if(LLVM_BUILD_LLVM_DYLIB)
     set(LIB_NAMES -Wl,--whole-archive ${LIB_NAMES} -Wl,--no-whole-archive)
     if (NOT LLVM_LINKER_IS_SOLARISLD AND NOT MINGW)
       # Solaris ld does not accept global: *; so there is no way to version *all* global symbols
-      set(LIB_NAMES -Wl,--version-script,${LLVM_LIBRARY_DIR}/tools/llvm-shlib/simple_version_script.map ${LIB_NAMES})
+      #set(LIB_NAMES -Wl,--version-script,${LLVM_LIBRARY_DIR}/tools/llvm-shlib/simple_version_script.map ${LIB_NAMES})
     endif()
     if (NOT MINGW)
       # Optimize function calls for default visibility definitions to avoid PLT and
