@@ -710,8 +710,10 @@ function(llvm_add_library name)
   endif()
 
   if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
+	 # for some reason libclang seems to have a lib prefix but no other library ???
+	 string(REPLACE "lib" "" name_without_prefix "${name}")
          set_property(TARGET ${name} APPEND_STRING PROPERTY
-                 LINK_FLAGS " -Wl,-soname,llvm/${CMAKE_INSTALL_LIBDIR}/lib${name}.so")
+                 LINK_FLAGS " -Wl,-soname,/llvm/${CMAKE_INSTALL_LIBDIR}/lib${name_without_prefix}.so")
   endif()
   target_link_libraries(${name} ${libtype}
       ${ARG_LINK_LIBS}
@@ -999,7 +1001,7 @@ macro(add_llvm_executable name)
   file(APPEND "/home/silvio/test.txt" "foo ${name} ${ARGN}\n")
   if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
 	  set_property(TARGET ${name} APPEND_STRING PROPERTY
-		  LINK_FLAGS " -Wl,-soname,llvm/${CMAKE_INSTALL_BINDIR}/${name}")
+		  LINK_FLAGS " -Wl,-soname,/llvm/${CMAKE_INSTALL_BINDIR}/${name}")
   endif()
 
   # Do not add -Dname_EXPORTS to the command-line when building files in this
@@ -1351,7 +1353,7 @@ macro(llvm_add_tool project name)
 
        if ("${CMAKE_SYSTEM_NAME}" STREQUAL "zwolf")
 	set_property(TARGET ${name} APPEND_STRING PROPERTY
-		LINK_FLAGS " -Wl,-soname,llvm/${${project}_TOOLS_INSTALL_DIR}/${name}")
+		LINK_FLAGS " -Wl,-soname,/llvm/${${project}_TOOLS_INSTALL_DIR}/${name}")
 endif()
         if (NOT LLVM_ENABLE_IDE)
           add_llvm_install_targets(install-${name}

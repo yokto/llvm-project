@@ -473,7 +473,7 @@ getOpenFileImpl(sys::fs::file_t FD, const Twine &Filename, uint64_t FileSize,
     MapSize = FileSize;
   }
 
-#ifndef __ZWOLF__
+#ifndef _ZWOLF
   if (shouldUseMmap(FD, FileSize, MapSize, Offset, RequiresNullTerminator,
                     PageSize, IsVolatile)) {
     std::error_code EC;

@@ -192,7 +192,7 @@ if (LIBCXXABI_ENABLE_SHARED)
       VERSION "${LIBCXXABI_LIBRARY_VERSION}"
   )
   set_target_properties(cxxabi_shared PROPERTIES NO_SONAME 1)    
-  target_link_options(cxxabi_shared PRIVATE "-Wl,-soname,llvm-libcxx/${CMAKE_INSTALL_LIBDIR}/libc++abi.so")
+  target_link_options(cxxabi_shared PRIVATE "-Wl,-soname,/llvm-libcxx/${CMAKE_INSTALL_LIBDIR}/libc++abi.so")
 
 
   if (ZOS)

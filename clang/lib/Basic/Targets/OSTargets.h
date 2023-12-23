@@ -373,6 +373,9 @@ protected:
     DefineStd(Builder, "unix", Opts);
     DefineStd(Builder, "linux", Opts);
     Builder.defineMacro("__ELF__");
+    if (Triple.getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
+      Builder.defineMacro("_ZWOLF", "1");
+    }
     if (Triple.isAndroid()) {
       Builder.defineMacro("__ANDROID__", "1");
       this->PlatformName = "android";

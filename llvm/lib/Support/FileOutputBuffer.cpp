@@ -183,7 +183,7 @@ FileOutputBuffer::create(StringRef Path, size_t Size, unsigned Flags) {
   case fs::file_type::regular_file:
   case fs::file_type::file_not_found:
   case fs::file_type::status_error:
-#ifdef __ZWOLF__
+#ifdef _ZWOLF
     if (true)
 #else
     if (Flags & F_no_mmap)

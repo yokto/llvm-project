@@ -369,7 +369,7 @@ TrivialMemoryManager::allocateTLSSection(uintptr_t Size, unsigned Alignment,
   // relocation here.
   int64_t TLSOffset;
   // does not link in zwolf can't be shared for some reason
-#ifndef __ZWOLF__
+#ifndef _ZWOLF
   asm("leaq LLVMRTDyldTLSSpace@tpoff, %0" : "=r"(TLSOffset));
 #endif
 

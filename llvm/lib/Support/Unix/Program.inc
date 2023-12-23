@@ -172,7 +172,7 @@ toNullTerminatedCStringArray(ArrayRef<StringRef> Strings, StringSaver &Saver) {
   return Result;
 }
 
-#ifdef __ZWOLF__
+#ifdef _ZWOLF
 #include <base/proc.h>
 #endif
 static bool Execute(ProcessInfo &PI, StringRef Program,
@@ -276,7 +276,7 @@ static bool Execute(ProcessInfo &PI, StringRef Program,
 #endif
 
   std::string PathStr = std::string(Program);
-#ifdef __ZWOLF__
+#ifdef _ZWOLF
   uintptr_t child;
   char ** origenv = const_cast<char **>(Envp);
   char * env[1] = { 0 };
@@ -433,7 +433,7 @@ ProcessInfo llvm::sys::Wait(const ProcessInfo &PI,
   if (ProcStat)
     ProcStat->reset();
 
-#ifdef __ZWOLF__
+#ifdef _ZWOLF
   uint8_t status2 = 0;
   base_proc_wait(ChildPid, &status2);
   WaitResult.ReturnCode = status2;
