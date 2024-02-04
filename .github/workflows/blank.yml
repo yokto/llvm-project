@@ -31,6 +31,7 @@ jobs:
           fileName: headers.tar.xz
           tarBall: true
           out-file-path: _zwolf/github__com_xlibc_2024_common
+          extract: true
           latest: true
       
       # Runs a set of commands using the runners shell
