@@ -29,7 +29,7 @@ jobs:
         with:
           repository: yokto/elf
           fileName: headers.tar.xz
-          tarBall: true
+          tarBall: false
           out-file-path: _zwolf/github__com_xlibc_2024_common
           extract: true
           latest: true
