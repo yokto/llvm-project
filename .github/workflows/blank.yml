@@ -30,7 +30,6 @@ jobs:
           repository: yokto/elf
           fileName: headers.tar.xz
           tarBall: false
-          out-file-path: _zwolf/github__com_xlibc_2024_common
           extract: true
           latest: true
       
@@ -38,4 +37,6 @@ jobs:
       - name: Run a multi-line script
         run: |
           ls
+          mkdir -p _zwolf/github__com_xlibc_2024/common
+          tar -C _zwolf/github__com_xlibc_2024/common -xf headers.tar.xz
           find _zwolf
