@@ -27,7 +27,7 @@ jobs:
 
       - uses: robinraju/release-downloader@v1.9
         with:
-          repository: yokto/elf
+          repository: https://github.com/yokto/elf
           fileName: headers.tar.xz
           tarBall: true
           out-file-path: xlibc
