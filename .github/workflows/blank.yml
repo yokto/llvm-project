@@ -44,7 +44,7 @@ jobs:
           tar -C _zwolf/github__com_xlibc_2024/common --strip-components=1 -xf headers.tar.xz
           mkdir -p build_linux
           cd build_linux
-          CC=clang CXX=clang cmake ../llvm \
+          CC=clang CXX=clang++ cmake ../llvm \
                 "-DLLVM_ENABLE_PROJECTS=clang;lld" \
                 "-DCMAKE_BUILD_TYPE=Release" \
                 "-DCMAKE_C_COMPILER=clang" \
