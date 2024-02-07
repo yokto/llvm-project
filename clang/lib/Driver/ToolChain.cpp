@@ -550,8 +550,7 @@ ToolChain::path_list ToolChain::getRuntimePaths() const {
   path_list Paths;
   auto addPathForTriple = [this, &Paths](const llvm::Triple &Triple) {
     if (Triple.getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
-	    SmallString<128> P(D.SysRoot);
-	    llvm::sys::path::append(P, "llvm-compiler-rt", llvm::Triple::getArchTypeName(Triple.getArch()), "lib");
+	    SmallString<128> P(D.SysRoot + RT_PREFIX + llvm::Triple::getArchTypeName(Triple.getArch()) + "/lib");
 	    Paths.push_back(std::string(P.str()));
     } else {
 	    SmallString<128> P(D.ResourceDir);
