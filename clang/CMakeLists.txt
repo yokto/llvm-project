@@ -201,10 +201,10 @@ set(CLANG_SPAWN_CC1 OFF CACHE BOOL
     "Whether clang should use a new process for the CC1 invocation")
 
 option(CLANG_DEFAULT_PIE_ON_LINUX "Default to -fPIE and -pie on linux-gnu" ON)
-option(XLIBC_PREFIX "path to xlibc" "/xlibc/");
-option(LIBCXX_PREFIX "path to xlibc" "/llvm-libcxx/");
-option(RT_PREFIX "path to xlibc" "/llvm-rt/");
-option(LLVM_PREFIX "path to xlibc" "/llvm/");
+option(XLIBC_PREFIX "path to xlibc" "/xlibc/")
+option(LIBCXX_PREFIX "path to xlibc" "/llvm-libcxx/")
+option(RT_PREFIX "path to xlibc" "/llvm-rt/")
+option(LLVM_PREFIX "path to xlibc" "/llvm/")
 
 set(CLANG_DEFAULT_LINKER "" CACHE STRING
   "Default linker to use (linker name or absolute path, empty for platform default)")
