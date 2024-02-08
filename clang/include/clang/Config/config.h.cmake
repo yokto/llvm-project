@@ -38,6 +38,11 @@
 /* Multilib basename for libdir. */
 #define CLANG_INSTALL_LIBDIR_BASENAME "${CLANG_INSTALL_LIBDIR_BASENAME}"
 
+#define XLIBC_PREFIX "${XLIBC_PREFIX}"
+#define LIBCXX_PREFIX "${LIBCXX_PREFIX}"
+#define RT_PREFIX "${RT_PREFIX}"
+#define LLVM_PREFIX "${LLVM_PREFIX}"
+
 /* Relative directory for resource files */
 #define CLANG_RESOURCE_DIR "${CLANG_RESOURCE_DIR}"
 

@@ -603,13 +603,13 @@ void Linux::AddClangSystemIncludeArgs(const ArgList &DriverArgs,
   llvm::sys::path::append(ResourceDirInclude, "include");
   if (!DriverArgs.hasArg(options::OPT_nobuiltininc) &&
       (!getTriple().isMusl() || DriverArgs.hasArg(options::OPT_nostdlibinc)))
-    addSystemInclude(DriverArgs, CC1Args, SysRoot + LLVM_PREFIX + "/common/include2");
+    addSystemInclude(DriverArgs, CC1Args, SysRoot + LLVM_PREFIX + "common/include2");
 
   if (DriverArgs.hasArg(options::OPT_nostdlibinc))
     return;
 
   if (getTriple().getEnvironment() == llvm::Triple::EnvironmentType::Zwolf) {
-    addSystemInclude(DriverArgs, CC1Args, SysRoot + XLIBC_PREFIX + "common/include"));
+    addSystemInclude(DriverArgs, CC1Args, SysRoot + XLIBC_PREFIX + "common/include");
   } else 
   {
   // LOCAL_INCLUDE_DIR
