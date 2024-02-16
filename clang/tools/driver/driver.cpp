@@ -57,6 +57,13 @@ using namespace clang::driver;
 using namespace llvm::opt;
 
 std::string GetExecutablePath(const char *Argv0, bool CanonicalPrefixes) {
+#ifdef _ZWOLF
+#ifdef __x86_64__
+	return std::string("/_zwolf") + LLVM_PREFIX + "x86_64/bin/clang";
+#else
+	return std::string("/_zwolf") + LLVM_PREFIX + "aarch64/bin/clang";
+#endif
+#endif
   if (!CanonicalPrefixes) {
     SmallString<128> ExecutablePath(Argv0);
     // Do a PATH lookup if Argv0 isn't a valid path.

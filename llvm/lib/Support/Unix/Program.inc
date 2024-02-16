@@ -282,7 +282,7 @@ static bool Execute(ProcessInfo &PI, StringRef Program,
   char * env[1] = { 0 };
 
   fflush(stdout);
-  base_proc_exec(PathStr.c_str(), const_cast<char **>(Argv), origenv ? origenv : env, &child);
+  base_proc_exec(PathStr.c_str(), const_cast<char **>(Argv), origenv ? origenv : env, 0, &child);
 #else
   // Create a child process.
   int child = fork();
