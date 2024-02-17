@@ -63,38 +63,51 @@ private:
 
 class _LIBUNWIND_HIDDEN RWMutex {
 public:
-  RWMutex() { mtx_init(&(this->mutex), mtx_plain); }
+  RWMutex() {
+	  mtx_init(&this->mutex, mtx_plain);
+	  cnd_init(&this->cond);
+  }
   bool lock_shared() {
-    mtx_lock(&(this->mutex));
-    this->readers++;
-    mtx_unlock(&(this->mutex));
-    return 0;
+	  mtx_lock(&this->mutex);
+	  while (this->readers < 0) {
+		  cnd_wait(&this->cond, &this->mutex);
+	  }
+	  this->readers++;
+	  mtx_unlock(&this->mutex);
+	  return 1;
   }
   bool unlock_shared() {
-    mtx_lock(&(this->mutex));
-    if (this->readers > 0) {
-        this->readers--;
-    } else {
-        mtx_unlock(&(this->mutex));
-        return 0;
-    }
-    if (this->readers == 0) {
-        mtx_unlock(&(this->mutex));
-    }
-    return 0;
+	  mtx_lock(&this->mutex);
+	  if (this->readers <= 0) { __builtin_trap(); }
+	  this->readers--;
+	  if (this->readers == 0) {
+		  cnd_signal(&this->cond);
+	  }
+	  mtx_unlock(&this->mutex);
+	  return 1;
   }
   bool lock() {
-    mtx_lock(&(this->mutex));
-    while (this->readers > 0) {
-        thrd_yield();
-    }
-    return 0;
+	  mtx_lock(&this->mutex);
+	  while (this->readers != 0) {
+		  cnd_wait(&this->cond, &this->mutex);
+	  }
+	  this->readers = -1;
+	  mtx_unlock(&this->mutex);
+	  return 1;
   }
-  bool unlock() { return unlock_shared(); }
+  bool unlock() {
+	  mtx_lock(&this->mutex);
+	  if (this->readers != -1) { __builtin_trap(); }
+	  this->readers = 0;
+	  cnd_broadcast(&this->cond);
+	  mtx_unlock(&this->mutex);
+	  return 1;
+  }
 
 private:
   mtx_t mutex;
-  int readers = 0;
+  cnd_t cond;
+  int readers = 0; // -1 is a writer
 };
 
 #else

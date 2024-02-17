@@ -81,30 +81,30 @@ void lld::unlinkAsync(StringRef path) {
   // to create path as a new file.
   // Instead we open the file and unlink it on this thread. The unlink is fast
   // since the open fd guarantees that it is not removing the last reference.
-  int fd;
-  std::error_code ec = sys::fs::openFileForRead(path, fd);
+//  int fd;
+//  std::error_code ec = sys::fs::openFileForRead(path, fd);
   sys::fs::remove(path);
-
-  if (ec)
-    return;
-
-  // close and therefore remove TempPath in background.
-  std::mutex m;
-  std::condition_variable cv;
-  bool started = false;
-  std::thread([&, fd] {
-    {
-      std::lock_guard<std::mutex> l(m);
-      started = true;
-      cv.notify_all();
-    }
-    ::close(fd);
-  }).detach();
-
-  // GLIBC 2.26 and earlier have race condition that crashes an entire process
-  // if the main thread calls exit(2) while other thread is starting up.
-  std::unique_lock<std::mutex> l(m);
-  cv.wait(l, [&] { return started; });
+//
+//  if (ec)
+//    return;
+//
+//  // close and therefore remove TempPath in background.
+//  std::mutex m;
+//  std::condition_variable cv;
+//  bool started = false;
+//  std::thread([&, fd] {
+//    {
+//      std::lock_guard<std::mutex> l(m);
+//      started = true;
+//      cv.notify_all();
+//    }
+//    ::close(fd);
+//  }).detach();
+//
+//  // GLIBC 2.26 and earlier have race condition that crashes an entire process
+//  // if the main thread calls exit(2) while other thread is starting up.
+//  std::unique_lock<std::mutex> l(m);
+//  cv.wait(l, [&] { return started; });
 #endif
 }
 

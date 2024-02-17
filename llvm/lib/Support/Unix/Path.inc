@@ -15,6 +15,12 @@
 //===          is guaranteed to work on *all* UNIX variants.
 //===----------------------------------------------------------------------===//
 
+#ifdef _ZWOLF
+extern "C" {
+#include <base/path.h>
+}
+#endif
+
 #include "Unix.h"
 #include <limits.h>
 #include <stdio.h>
@@ -1456,6 +1462,13 @@ static const char *getDefaultTempDir(bool ErasedOnReboot) {
 
 void system_temp_directory(bool ErasedOnReboot, SmallVectorImpl<char> &Result) {
   Result.clear();
+#ifdef _ZWOLF
+{
+  const char *RequestedDir = base_path_tmp();
+  Result.append(RequestedDir, RequestedDir + strlen(RequestedDir));
+  return;
+}
+#endif
 
   if (ErasedOnReboot) {
     // There is no env variable for the cache directory.

@@ -1289,6 +1289,13 @@ Error TempFile::keep(const Twine &Name) {
       remove(TmpName);
   }
 #else
+#ifdef _ZWOLF // on windows we need to close before rename
+  if (close(FD) == -1) {
+    std::error_code EC(errno, std::generic_category());
+    return errorCodeToError(EC);
+  }
+  FD = -1;
+#endif
   std::error_code RenameEC = fs::rename(TmpName, Name);
   if (RenameEC) {
     // If we can't rename, try to copy to work around cross-device link issues.
@@ -1303,11 +1310,13 @@ Error TempFile::keep(const Twine &Name) {
   if (!RenameEC)
     TmpName = "";
 
+#ifndef _ZWOLF
   if (close(FD) == -1) {
     std::error_code EC(errno, std::generic_category());
     return errorCodeToError(EC);
   }
   FD = -1;
+#endif
 
   return errorCodeToError(RenameEC);
 }
